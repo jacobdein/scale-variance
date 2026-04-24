@@ -45,8 +45,9 @@ htmlcov/
 .nox/
 
 # --- Docs ---
-python/docs/site/
+python/site/
 python/docs/_build/
+python/.cache/
 
 # --- Parity harness ---
 tests/_runs/

@@ -44,6 +44,17 @@ dev = [
     "ruff>=0.4",
     "mypy>=1.8",
 ]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+    "mkdocs-jupyter>=0.24",
+    "mkdocstrings[python]>=0.24",
+    "matplotlib>=3.7",
+    "jupyter>=1",
+    "nbformat>=5",
+    "nbconvert>=7",
+    "ipykernel>=6",
+]
 
 [project.urls]
 Homepage = "https://github.com/jacobdein/scale-variance"
