@@ -1,0 +1,12 @@
+{
+  "kind": "tabular",
+  "description": "Ragged 3-level admin hierarchy (counties/states/regions). Fan-out varies: some states have 3 counties and others 5; one region has 2 states, another 4. Hand-derived.",
+  "value": "value",
+  "id_cols": [
+    "county_id",
+    "state_id",
+    "region_id"
+  ],
+  "agg_fun": "mean",
+  "na_handling": "drop_na"
+}

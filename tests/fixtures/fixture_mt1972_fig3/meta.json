@@ -1,0 +1,11 @@
+{
+  "kind": "raster",
+  "description": "Moellering & Tobler (1972) Figure 3 checkerboard. Gold-standard acceptance fixture: expected TSS=1152, TDF=255 from the paper.",
+  "num_levels": null,
+  "base_level_factor": 2,
+  "agg_fun": "mean",
+  "na_handling": "drop_na",
+  "crs": null,
+  "nrow": 16,
+  "ncol": 16
+}
