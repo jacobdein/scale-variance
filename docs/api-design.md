@@ -125,15 +125,17 @@ One row per level `1..k`. Columns:
 
 ### `elements` (always present)
 
-List/dict keyed by level number, one dataframe per level. Each dataframe has one row per parent cell at level `n+1` and columns:
+List/dict keyed by level number, one dataframe per level. Each dataframe has **one row per distinct level-`n` cell** (i.e. per child — the `id_level_n` side of the hierarchy) and columns:
 
-- `id` — level-`n+1` parent cell ID.
-- `mean_child` — aggregated value of the level-`n` children (= `value_level_n` for this parent group, by construction constant within the group).
-- `mean_parent` — value at level `n+1` (= `value_level_(n+1)`).
-- `sv` — `(mean_parent − mean_child)²`, summed over children *within* the parent. This is the per-parent contribution to `SS_level_n`.
-- `sv_per_df` — `sv / df_level_n`, useful for comparing parents across levels.
+- `id` — the level-`n` cell id (one row per distinct value of `id_level_n`).
+- `mean_child` — that cell's level-`n` value (= `value_level_n`, constant within the level-`n` group by construction).
+- `mean_parent` — the value of its level-`(n+1)` parent (= `value_level_(n+1)` for this cell).
+- `sv` — `(mean_parent − mean_child)²`. Per-child contribution to `SS_level_n`. Summing `sv` across all rows of `elements[n]` recovers `SS_level_n`.
+- `sv_per_df` — `sv / df_level_n`, useful for comparing rows across levels on a common denominator.
 
-For raster input, `elements[[n]]` can be reshaped back to a raster via `sve_to_raster()` (helper provided in the raster module). For tabular input, `elements[[n]]` is a pure dataframe.
+This matches the polygon R reference's `compute_sv_elements` behavior and the per-element semantic in [`theory.md`](theory.md) step 6.
+
+For raster input, `elements[n]` can be reshaped back to a raster via `sve_to_raster()` (helper planned for v0.3; see [ROADMAP.md](../ROADMAP.md)). For tabular input, `elements[n]` is a pure dataframe.
 
 ### `wide_table` (always present)
 

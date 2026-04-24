@@ -4,21 +4,28 @@ This file is the working handoff to Claude Code. Read it end-to-end before writi
 
 ## The goal
 
-Build two open-source packages, `scalevar` (R) and `scalevar` (Python), that implement the scale-variance decomposition of Moellering & Tobler (1972). Both must conform to the API in `docs/api-design.md` and produce numerically equivalent results on every fixture in `tests/fixtures/`. Target an initial release tag of **v0.1.0**, published to GitHub only. CRAN / PyPI publication is deliberately deferred. Long-term target: a JOSS paper once the API is stable and adopted.
+Build two open-source packages — `scalevar` (Python, under `python/`) and `scalevar` (R, under `r/`) — that implement the scale-variance decomposition of Moellering & Tobler (1972). Both must conform to the API in `docs/api-design.md` and produce numerically equivalent results on every fixture in `tests/fixtures/`.
 
-The package is being extracted from a real research codebase that developed the method in two passes:
+**Shipping is staged:**
+
+- **v0.1.0 — Python only.** Ship the Python package from GitHub. Hand-derived fixtures (`fixture_mt1972_fig3`, `fixture_irregular_admin`) are the oracle; numerically validated against the paper's published totals. No PyPI submission yet.
+- **v0.2.0 — R sibling + parity.** Add the R package, run the shared parity harness across both, then publish both. CRAN / PyPI submissions fold into v0.2 as well.
+
+Long-term target: a JOSS paper once the API is stable and adopted.
+
+The packages are being extracted from a real research codebase that developed the method in two passes:
 
 1. A polygon-based workflow for a bird diversity scale-dependence study in London (2023–2024).
 2. A raster-based workflow for a follow-on environmental factors study using NDVI and land-cover rasters (2025).
 
-**The raster implementation is the canonical reference for v0.1 behavior.** It is cleaner, more faithful to the paper, and covers the main use case. The polygon implementation is retained for traceability and because its nested-grid generator (`create_hbins`) is still useful as an optional helper. See `reference/README.md` for full provenance of the two references.
+**The raster R implementation (`reference/raster-R-implementation/`) is the canonical reference for v0.1 and v0.2 behavior.** It is cleaner, more faithful to the paper, and covers the main use case. The polygon implementation is retained for traceability and because its nested-grid generator (`create_hbins`) is still useful as an optional helper. See `reference/README.md` for full provenance of the two references.
 
 You do **not** need to port the domain-specific scaffolding from either study (eBird filtering, iNEXT diversity estimation, kriging, land-cover class masking, the paper's plotting code). Only the general-purpose scale-variance algorithm and its immediate helpers belong here.
 
 ## The non-goals
 
 - **No FFI.** No Rust or C++ core. Pure R and pure Python, two standalone implementations that share fixtures and an API spec.
-- **No CRAN / PyPI publication in v0.1.** Ship from GitHub, validate the API, then publish in v0.2.
+- **No CRAN / PyPI publication in v0.1 or v0.2.** Ship from GitHub, validate the API, then publish (decision point in v0.2 once the R sibling is also validated against the shared fixtures).
 - **No domain-specific helpers.** No `scale_variance_batch`, no `compute_cell_values`, no bird-specific or ecology-specific wrappers. See `docs/api-design.md` § "What is NOT in v0.1." Users can write one-liners in the host language; bundling them adds surface area without value.
 - **No spatial coupling in the tabular core.** `scale_variance(df, value, id_cols)` operates on a dataframe with integer ID columns and a value column. Spatial and raster functionality lives in clearly separated modules and is opt-in via `Suggests` (R) / extras (Python).
 - **No significance testing, no imputation, no automated hierarchy construction.** See `docs/theory.md` § "What we do not implement."
@@ -34,21 +41,29 @@ Plus two optional spatial helpers: `create_hbins` (nested grid generator) and `j
 
 ## Execution order
 
-Work in this order. Do not skip ahead — each step de-risks the next.
+### v0.1.0 (Python package — this is the current target)
 
 1. **Read the docs.** `docs/theory.md`, `docs/api-design.md`, `docs/parity-testing.md`, `reference/README.md`. Skim `reference/raster-R-implementation/scale-variance.R` (the canonical R reference) and `reference/polygon-R-implementation/5 - compute scale variance.R` (the earlier form, kept for traceability). Confirm you can state, in one paragraph, what `scale_variance` does and how `SS_total = Σ SS_level_n` closes the decomposition identity. If you cannot, re-read.
-2. **Generate the shared fixtures.** Build the `tests/fixtures/` bundles listed in `docs/parity-testing.md`. Start with `fixture_mt1972_fig3` — this is the gold-standard acceptance test; its expected values (`TSS = 1152`, `TDF = 255`) come directly from the 1972 paper. Then `fixture_even_3level_perfect`, `fixture_even_with_nas`, `fixture_irregular_admin` (with a `derivation.md`), and the raster-specific fixtures. Only once fixtures exist should implementation begin.
-3. **Implement the Python package first.** Rationale: Python's testing toolchain is faster to iterate on, and pandas/numpy map cleanly onto the math. Start with the tabular core `scale_variance`; validate against `fixture_irregular_admin` and `fixture_even_3level_perfect`. Then add `scale_variance_raster` on top, validated against `fixture_mt1972_fig3` and the raster fixtures.
-4. **Cross-check against the R reference.** Run the raster R reference (`reference/raster-R-implementation/scale-variance.R`) on every raster fixture and record its outputs. Reconcile any discrepancies per the workflow in `docs/parity-testing.md`. If the R reference is wrong on an edge case, record it in `reference/known-issues.md`.
-5. **Implement the R package.** Behavioral parity with Python is the gate. Use `terra::aggregate` for the raster path — the R reference already does this.
-6. **Build the parity harness** (`tests/run_parity.py`) and wire it into CI (`.github/workflows/parity.yml`). Must dispatch on fixture kind (tabular vs raster).
-7. **Write the spatial polygon helpers** (`create_hbins`, `join_hbins`) in both packages. Refuse unprojected CRSes — see `reference/polygon-R-implementation/crs-correction-note.txt`. This is a deliberate behavioral fix relative to the original bird-study code.
-8. **Write examples and vignettes.** Each package ships:
+2. **Generate the hand-derived fixtures.** Build the `tests/fixtures/` bundles needed by v0.1. The two that anchor correctness are `fixture_mt1972_fig3` (gold-standard raster — `TSS = 1152`, `TDF = 255` from the 1972 paper) and `fixture_irregular_admin` (ragged tabular, hand-derived). Both have `derivation.md` spelling out every integer.
+3. **Implement the Python package.** Tabular core `scale_variance` first, validated against `fixture_irregular_admin`. Then `scale_variance_raster` on top, validated against `fixture_mt1972_fig3`. Optional spatial helpers `create_hbins` / `join_hbins` behind the `[spatial]` extra.
+4. **Tests & lint.** `pytest` green, `ruff` clean, every documented error class covered.
+5. **Examples.** Three Jupyter notebooks shipped with the package:
    - A **non-spatial tabular example** — a small synthetic admin hierarchy (region → state → county) with random values. Shows `scale_variance` on non-spatial data.
-   - A **raster example** — either generate a synthetic 128×128 raster with known multi-scale structure (e.g. sum of sinusoids at multiple frequencies) or use a small subset of an open-licensed raster. Shows `scale_variance_raster` end-to-end and plots the components as a lollipop / barplot.
+   - A **raster example** — a synthetic 128×128 raster with known multi-scale structure (sum of sinusoids at multiple frequencies). Shows `scale_variance_raster` end-to-end and plots the components.
    - A **polygon-hierarchy example** — build `create_hbins` on a tiny AOI, join random point observations, call `scale_variance`. Shows the polygon path.
    - Keep examples fast: under 5 seconds to run.
-9. **Polish.** Package websites (`pkgdown` for R, `mkdocs-material` for Python), README quick-starts that actually work, `NEWS.md` / `CHANGELOG.md`.
+6. **Docs site.** `mkdocs-material` under `python/docs/`, deployed via GitHub Pages.
+7. **Polish.** `CHANGELOG.md`, README quick-starts that actually work.
+8. **Tag `v0.1.0`.** GitHub Release note derived from `CHANGELOG.md`.
+
+### v0.2.0 (R sibling + parity — deferred)
+
+9. **Generate the remaining fixtures** needed for parity: `fixture_even_3level_perfect`, `fixture_even_with_nas`, `fixture_raster_mean_vs_sum`, `fixture_landcover_binary`, `fixture_base_factor_3`, `fixture_edge_single_level`, `fixture_crs_unprojected_aoi`, plus 5 random raster + 5 random tabular. The Python implementation (already v0.1-tested against hand-derived fixtures) is the oracle for random fixtures; R must match it.
+10. **Cross-check against the R reference.** Run the raster R reference (`reference/raster-R-implementation/scale-variance.R`) on every raster fixture and record its outputs. Reconcile any discrepancies per the workflow in `docs/parity-testing.md`. If the R reference is wrong on an edge case, record it in `reference/known-issues.md`.
+11. **Implement the R package** under `r/`. Behavioral parity with the v0.1 Python package is the gate. Use `terra::aggregate` for the raster path. Ship `create_hbins` and `join_hbins` with identical CRS-refusal behavior.
+12. **Build the parity harness** (`tests/run_parity.py`) and wire it into CI (`.github/workflows/parity.yml`). Must dispatch on fixture kind (tabular vs raster).
+13. **pkgdown site for R.** Deploy alongside the Python mkdocs site.
+14. **Tag `v0.2.0`.** Optional: submit to PyPI and/or r-universe at this point.
 
 ## Repository layout (target state)
 
@@ -155,15 +170,27 @@ Bring these back to the human if they come up:
 
 Minor internal refactors, dependency pinning details, CI matrix choices, doc site theming, commit messages — you decide.
 
-## Definition of done for v0.1.0
+## Definition of done for v0.1.0 (Python)
 
-- [ ] `r/` and `python/` each implement the API in `docs/api-design.md` and pass all fixtures in `tests/fixtures/`, including the `fixture_mt1972_fig3` gold-standard.
-- [ ] Parity harness in CI, green on every supported R × Python combo, dispatching correctly between tabular and raster fixtures.
-- [ ] Spatial helpers exist and refuse unprojected CRSes with identical error messages in both packages.
-- [ ] Raster helpers accept the documented input types (R: `terra::SpatRaster`; Python: `xarray.DataArray`, `numpy.ndarray`).
-- [ ] Each package has a README with working quick-starts and three vignettes/notebooks: non-spatial tabular, raster, polygon-hierarchy.
-- [ ] `pkgdown` site for R, `mkdocs-material` site for Python, both deployed via GitHub Pages.
+- [x] `python/` implements the API in `docs/api-design.md` and passes the hand-derived fixtures in `tests/fixtures/`, including the `fixture_mt1972_fig3` gold-standard (`TSS = 1152`, `TDF = 255` from the paper) and the ragged `fixture_irregular_admin`.
+- [x] Python spatial helpers exist and refuse unprojected CRSes with the exact error message documented in `docs/api-design.md`.
+- [x] Python raster entry point accepts `xarray.DataArray` and `numpy.ndarray`; rejects multi-band input explicitly.
+- [x] `pytest` green, `ruff` clean.
+- [ ] `python/README.md` has a working quick-start that copy-pastes.
+- [ ] Three Jupyter notebooks under `python/docs/examples/`: non-spatial tabular, raster synthetic, polygon-hierarchy.
+- [ ] `mkdocs-material` site under `python/docs/` deployed via GitHub Pages.
 - [ ] `CITATION.cff` references Moellering & Tobler 1972 (already done — verify before tagging).
-- [ ] Tag `v0.1.0` on the default branch with a populated GitHub Release note derived from `NEWS.md` / `CHANGELOG.md`.
+- [ ] `CHANGELOG.md` with a v0.1.0 section.
+- [ ] Tag `v0.1.0` on the default branch with a populated GitHub Release note.
+
+## Definition of done for v0.2.0 (R sibling + parity)
+
+- [ ] `r/` implements the API in `docs/api-design.md` and passes all fixtures in `tests/fixtures/`.
+- [ ] All remaining fixtures generated (see step 9 above), including the random property-based suite.
+- [ ] Parity harness in CI, green on every supported R × Python combo, dispatching correctly between tabular and raster fixtures.
+- [ ] R spatial helpers exist and refuse unprojected CRSes with identical error messages to Python.
+- [ ] `r/README.md` with a working quick-start and three vignettes matching the Python notebooks.
+- [ ] `pkgdown` site for R deployed alongside the Python docs.
+- [ ] Tag `v0.2.0`. Optional: submit to PyPI and r-universe.
 
 Open a PR per logical chunk. Keep the commit history clean — the research community will read it, and the eventual JOSS submission will reference it.
