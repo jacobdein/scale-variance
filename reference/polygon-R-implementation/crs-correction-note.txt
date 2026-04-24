@@ -1,0 +1,11 @@
+After publication, we discovered that parts of the analysis for this article (specifically, the hierarchical grids) incorrectly used the Web Mercator (EPSG:3857) spatial reference system that introduces distance distortion at the study area's latitude. In the London region, the distortion factor is approximately 0.623, meaning that all reported spatial scales should be multiplied by 0.623 to reflect true ground distances.
+
+For example:
+
+Reported 1,000m scale = actual 623m
+Reported 2,000m scale = actual 1,246m
+Reported 8,000m scale = actual 4,984m
+
+While the absolute scale values are incorrect, all relative relationships, patterns, variance distributions, and conclusions remain valid. The scale dependence patterns, variance components, and spatial distributions of squared deviations are accurate relative to one another. The scientific conclusions about urban-rural gradients and water feature influences on bird diversity at different scales remain unchanged.
+
+We provided an attached correction note for the article to alert readers of the corrected spatial scales, with the findings and conclusions remaining unchanged.

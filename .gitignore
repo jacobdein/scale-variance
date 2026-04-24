@@ -1,0 +1,57 @@
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- R ---
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+r/.Rbuildignore
+r/src/*.o
+r/src/*.so
+r/src/*.dll
+
+# Knitted / rendered
+*.html
+*.pdf
+!reference/**/*.pdf
+r/docs/
+r/inst/doc/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# --- Docs ---
+python/docs/site/
+python/docs/_build/
+
+# --- Parity harness ---
+tests/_runs/
+tests/_diffs/
+
+# --- Generated fixtures (derived only; inputs are committed) ---
+# If we ever generate expected_*.csv from a regenerate script,
+# keep them under version control — they are the test oracle.

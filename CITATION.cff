@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+title: "scalevar: Scale variance decomposition for hierarchical data"
+message: >-
+  If you use this software, please cite both the software itself and the
+  original method paper by Moellering and Tobler (1972).
+type: software
+authors:
+  - family-names: Dein
+    given-names: Jacob
+    email: jake@jacobdein.com
+repository-code: "https://github.com/jacobdein/scale-variance"
+license: MIT
+version: 0.0.0-dev
+preferred-citation:
+  type: article
+  title: Geographical Variances
+  authors:
+    - family-names: Moellering
+      given-names: Harold
+    - family-names: Tobler
+      given-names: Waldo
+  journal: Geographical Analysis
+  volume: 4
+  issue: 1
+  year: 1972
+  start: 34
+  end: 50
+  doi: 10.1111/j.1538-4632.1972.tb00455.x
+references:
+  - type: article
+    authors:
+      - family-names: Moellering
+        given-names: Harold
+      - family-names: Tobler
+        given-names: Waldo
+    title: Geographical Variances
+    journal: Geographical Analysis
+    volume: 4
+    issue: 1
+    year: 1972
+    start: 34
+    end: 50
+    doi: 10.1111/j.1538-4632.1972.tb00455.x
