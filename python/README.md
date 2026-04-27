@@ -111,14 +111,6 @@ The paper-canonical variance share is `components.ss_share` (sums to 1). `compon
 
 The R sibling package (`r/` in the repository) is planned for **v0.2.0** alongside a cross-language parity harness that will validate both implementations against the shared [`tests/fixtures/`](../tests/fixtures/) suite. See the project [ROADMAP](../ROADMAP.md) and [CHANGELOG](../CHANGELOG.md).
 
-## Citation
-
-If you use `scalevar` in research, please cite the original method:
-
-> Moellering, H., & Tobler, W. (1972). Geographical Variances. *Geographical Analysis*, 4(1), 34–50. <https://doi.org/10.1111/j.1538-4632.1972.tb00455.x>
-
-A machine-readable [`CITATION.cff`](../CITATION.cff) is provided at the repository root.
-
 ## License
 
 MIT — see [`LICENSE`](../LICENSE).

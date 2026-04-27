@@ -26,7 +26,6 @@ First release. Python package ships from GitHub; the R sibling package is planne
 - **28 pytest tests** green. Includes identity closures (`Σ SS = TSS`, `Σ df = total_df`, `Σ ss_share = 1`), NA handling, every documented error class, tabular↔raster roundtrip, and CRS validation.
 - **Three example notebooks** under `python/docs/examples/`: tabular admin hierarchy, synthetic multi-scale raster, polygon hierarchy.
 - **Documentation site** powered by mkdocs-material at `python/mkdocs.yml` with auto-generated API reference via mkdocstrings. Deployed to GitHub Pages.
-- **`CITATION.cff`** pointing at the 1972 paper.
 - **CI**: pytest + ruff across Python 3.10–3.13 on Ubuntu and macOS; docs build/deploy on push to main.
 
 ### Design notes

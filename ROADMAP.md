@@ -11,7 +11,6 @@ Ship-from-GitHub scope. No PyPI submission yet.
 - Shared hand-derived fixture suite under `tests/fixtures/`: `fixture_mt1972_fig3` (gold standard — `TSS = 1152`, `TDF = 255` from the paper) and `fixture_irregular_admin` (ragged 3-level, hand-derived). Both ship with a `derivation.md`.
 - Three example notebooks: non-spatial tabular, raster synthetic multi-scale, polygon-hierarchy.
 - `mkdocs-material` documentation site under `python/docs/`, deployed via GitHub Pages.
-- `CITATION.cff` pointing at the 1972 paper.
 - Python-only CI workflow running `pytest` + `ruff`.
 
 Definition of done is in [`CLAUDE.md`](CLAUDE.md).

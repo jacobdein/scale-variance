@@ -29,21 +29,18 @@ Each `SS_level_n` is the variation explained by moving from the finer level `n` 
 
 See [`docs/theory.md`](docs/theory.md) for the full derivation, and the 1972 paper at [`reference/Moellering-1972-Geographical Variances.pdf`](reference/Moellering-1972-Geographical%20Variances.pdf).
 
-## Why a package?
-
-The method is simple but fiddly in practice: hierarchies can be ragged, missing values need consistent handling, degrees-of-freedom accounting differs by case, and the paper-canonical normalization (`SS / TSS`) is easy to confuse with the intuitive-but-different `MS / Σ MS`. Reimplementing it ad hoc — as the author has done more than once while developing this method in research projects — is error-prone. `scalevar` gives a tested, documented, citeable primitive.
-
 ## What `scalevar` is good for
 
-The method is not intrinsically spatial. It applies to any nested hierarchy where you have a scalar value at the finest level:
+`scalevar` is built for spatial scale analysis — rasters like NDVI or land cover, and nested polygon hierarchies like admin boundaries or watersheds. These are the cases the 1972 paper, and nearly all published applications, target.
 
 - **Raster analysis.** NDVI, land cover, elevation, species density, population density, nighttime lights — anywhere you want to ask "at what scale does most of the variation live?"
 - **Polygon hierarchies.** Admin boundaries (tract → county → state), watershed hierarchies, political districts.
-- **Non-spatial hierarchies.** Taxonomic trees (species → genus → family), organizational structures, temporal bins (hour → day → week).
 
 A thin optional spatial module builds regular nested grids on top of `geopandas` (and `sf` once the R package lands) for users who want the Moellering & Tobler workflow out of the box.
 
-## Quick start (Python v0.1.0)
+Under the hood the algorithm is a nested fixed-effects ANOVA decomposition — the original paper even introduces it with a non-geographic example (academic salaries across departments, colleges, and universities). The tabular core `scale_variance` therefore works on any nested hierarchy with a scalar value at the leaves, spatial or not. However, this implementation is intended for hierarchies that have some relationship to geographic or spatial scale.
+
+## Quick start
 
 ### Raster input (the main path)
 
@@ -83,14 +80,6 @@ result = scale_variance(
 ```
 
 See [`python/README.md`](python/README.md) for the full Python quick-start and three worked example notebooks.
-
-## Citation
-
-If you use `scalevar` in research, please cite the original method:
-
-> Moellering, H., & Tobler, W. (1972). Geographical Variances. *Geographical Analysis*, 4(1), 34–50. https://doi.org/10.1111/j.1538-4632.1972.tb00455.x
-
-A [`CITATION.cff`](CITATION.cff) file is provided with machine-readable citation metadata.
 
 ## License
 

@@ -72,7 +72,6 @@ scale-variance/
 ├── README.md                         # DONE — update to reflect raster-first API before tagging
 ├── CLAUDE.md                         # this file
 ├── LICENSE                           # DONE — MIT
-├── CITATION.cff                      # DONE
 ├── ROADMAP.md                        # DONE
 ├── .gitignore                        # DONE
 ├── docs/
@@ -179,7 +178,6 @@ Minor internal refactors, dependency pinning details, CI matrix choices, doc sit
 - [ ] `python/README.md` has a working quick-start that copy-pastes.
 - [ ] Three Jupyter notebooks under `python/docs/examples/`: non-spatial tabular, raster synthetic, polygon-hierarchy.
 - [ ] `mkdocs-material` site under `python/docs/` deployed via GitHub Pages.
-- [ ] `CITATION.cff` references Moellering & Tobler 1972 (already done — verify before tagging).
 - [ ] `CHANGELOG.md` with a v0.1.0 section.
 - [ ] Tag `v0.1.0` on the default branch with a populated GitHub Release note.
 

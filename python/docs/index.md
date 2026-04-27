@@ -53,10 +53,3 @@ See the [getting started guide](getting-started.md) and the three [worked exampl
 
 The R sibling package (`r/` in the repository) is planned for **v0.2.0** alongside a cross-language parity harness. See the project [ROADMAP](https://github.com/jacobdein/scale-variance/blob/main/ROADMAP.md) for details.
 
-## Citation
-
-If you use `scalevar` in research, please cite the original method:
-
-> Moellering, H., & Tobler, W. (1972). Geographical Variances. *Geographical Analysis*, 4(1), 34–50. <https://doi.org/10.1111/j.1538-4632.1972.tb00455.x>
-
-A machine-readable [`CITATION.cff`](https://github.com/jacobdein/scale-variance/blob/main/CITATION.cff) is provided in the repository.
