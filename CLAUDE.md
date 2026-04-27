@@ -49,7 +49,7 @@ Plus two optional spatial helpers: `create_hbins` (nested grid generator) and `j
 4. **Tests & lint.** `pytest` green, `ruff` clean, every documented error class covered.
 5. **Examples.** Three Jupyter notebooks shipped with the package:
    - A **non-spatial tabular example** — a small synthetic admin hierarchy (region → state → county) with random values. Shows `scale_variance` on non-spatial data.
-   - A **raster example** — a synthetic 128×128 raster with known multi-scale structure (sum of sinusoids at multiple frequencies). Shows `scale_variance_raster` end-to-end and plots the components.
+   - A **paper-canonical raster example** (`02_raster_mt1972_fig3.ipynb`) — the 16×16 Figure 3 checkerboard from Moellering & Tobler (1972), reusing the `fixture_mt1972_fig3` data. Runs `scale_variance_raster` and `scale_variance` back-to-back on the same data, asserts the paper's published totals (`TSS = 1152`, `TDF = 255`), and produces the lollipop also used as the README hero (rendered by `python/docs/_static/build_hero.py`).
    - A **polygon-hierarchy example** — build `create_hbins` on a tiny AOI, join random point observations, call `scale_variance`. Shows the polygon path.
    - Keep examples fast: under 5 seconds to run.
 6. **Docs site.** `mkdocs-material` under `python/docs/`, deployed via GitHub Pages.
@@ -176,7 +176,7 @@ Minor internal refactors, dependency pinning details, CI matrix choices, doc sit
 - [x] Python raster entry point accepts `xarray.DataArray` and `numpy.ndarray`; rejects multi-band input explicitly.
 - [x] `pytest` green, `ruff` clean.
 - [ ] `python/README.md` has a working quick-start that copy-pastes.
-- [ ] Three Jupyter notebooks under `python/docs/examples/`: non-spatial tabular, raster synthetic, polygon-hierarchy.
+- [ ] Three Jupyter notebooks under `python/docs/examples/`: non-spatial tabular, Moellering & Tobler (1972) Figure 3, polygon-hierarchy.
 - [ ] `mkdocs-material` site under `python/docs/` deployed via GitHub Pages.
 - [ ] `CHANGELOG.md` with a v0.1.0 section.
 - [ ] Tag `v0.1.0` on the default branch with a populated GitHub Release note.

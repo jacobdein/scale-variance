@@ -136,115 +136,179 @@ def build_tabular_admin() -> nbf.NotebookNode:
     return _nb(title, cells)
 
 
-def build_raster_synthetic() -> nbf.NotebookNode:
+def build_raster_mt1972_fig3() -> nbf.NotebookNode:
     title = (
-        "# 2 — Synthetic multi-scale raster\n"
+        "# 2 — Moellering & Tobler (1972) Figure 3\n"
         "\n"
-        "Constructs a 128×128 raster as a sum of sinusoids at three different "
-        "spatial frequencies. Because each frequency lives cleanly at a specific "
-        "aggregation scale, `scale_variance_raster` should show most of the variance "
-        "at a handful of levels."
+        "Reproduces the worked example from the original 1972 paper. "
+        "A 16×16 raster of integer values `{2, 5, 8}` arranged as a checkerboard "
+        "of checkerboards: a fine 2×2 alternation nested inside a coarse 2×2 "
+        "quadrant pattern. The paper reports `TSS = 1152` and `TDF = 255`; the "
+        "scale-variance decomposition concentrates equally at the **finest** and "
+        "**coarsest** scales (50% / 50%), with zeros in between.\n"
+        "\n"
+        "We run the example twice, end-to-end:\n"
+        "\n"
+        "1. Through `scale_variance_raster` on the raster directly.\n"
+        "2. Through `scale_variance` on the same data flattened to a tabular "
+        "   nested hierarchy.\n"
+        "\n"
+        "Both paths return identical components — by design."
     )
     cells = [
         ("md", "## Setup"),
         (
             "code",
             "import numpy as np\n"
+            "import pandas as pd\n"
             "import matplotlib.pyplot as plt\n"
             "\n"
-            "from scalevar import scale_variance_raster\n"
-            "\n"
-            "rng = np.random.default_rng(20260424)",
+            "from scalevar import scale_variance, scale_variance_raster",
         ),
-        ("md", "## Build the input\n\n"
-               "Three cosine components at wavelengths 64, 16, and 4 pixels — "
-               "corresponding roughly to level-4, level-3, and level-1 aggregations "
-               "with `base_level_factor=2` — plus a small noise floor."),
+        ("md", "## Build the input — the 16×16 Figure 3 raster\n\n"
+               "Top-left 8×8 quadrant: a `{2, 5}` checkerboard. "
+               "Top-right and bottom-left 8×8: `{5, 8}` checkerboards. "
+               "Bottom-right 8×8: `{2, 5}` again. "
+               "Two structural scales by construction: a 2-pixel alternation and an 8-pixel quadrant pattern."),
         (
             "code",
-            "n = 128\n"
-            "y, x = np.mgrid[0:n, 0:n].astype(float)\n"
+            "raster = np.array([\n"
+            "    [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n"
+            "    [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n"
+            "    [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n"
+            "    [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n"
+            "    [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n"
+            "    [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n"
+            "    [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n"
+            "    [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n"
+            "    [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n"
+            "    [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n"
+            "    [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n"
+            "    [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n"
+            "    [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n"
+            "    [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n"
+            "    [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n"
+            "    [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n"
+            "], dtype=float)\n"
             "\n"
-            "coarse  = 1.0 * np.cos(2*np.pi*x/64) * np.cos(2*np.pi*y/64)\n"
-            "medium  = 0.6 * np.cos(2*np.pi*x/16) * np.cos(2*np.pi*y/16)\n"
-            "fine    = 0.3 * np.cos(2*np.pi*x/4)  * np.cos(2*np.pi*y/4)\n"
-            "noise   = 0.05 * rng.standard_normal((n, n))\n"
-            "\n"
-            "raster = coarse + medium + fine + noise\n"
-            "\n"
-            "fig, ax = plt.subplots(figsize=(5, 5))\n"
-            "im = ax.imshow(raster, cmap='RdBu_r', vmin=-1.8, vmax=1.8, origin='lower')\n"
-            "ax.set_title('synthetic 128×128 raster')\n"
+            "fig, ax = plt.subplots(figsize=(4.2, 4.2))\n"
+            "palette = {2: '#0072B2', 5: '#F0E442', 8: '#D55E00'}\n"
+            "rgb = np.zeros(raster.shape + (3,))\n"
+            "for v, hexcol in palette.items():\n"
+            "    c = np.array([int(hexcol[i:i+2], 16) for i in (1, 3, 5)]) / 255.0\n"
+            "    rgb[raster == v] = c\n"
+            "ax.imshow(rgb, interpolation='nearest')\n"
+            "for k in range(17):\n"
+            "    ax.axhline(k - 0.5, color='white', lw=0.4, alpha=0.6)\n"
+            "    ax.axvline(k - 0.5, color='white', lw=0.4, alpha=0.6)\n"
             "ax.set_xticks([]); ax.set_yticks([])\n"
-            "fig.colorbar(im, ax=ax, shrink=0.75)\n"
+            "ax.set_title('Figure 3 — 16×16 raster, values {2, 5, 8}')\n"
             "fig.tight_layout()\n"
             "plt.show()",
         ),
-        ("md", "## Decompose across 8 levels\n\n"
-               "`num_levels=None` (default) auto-picks `floor(log_b(min(nrow, ncol))) + 1 = 8` "
-               "levels for a 128×128 base-2 hierarchy."),
+        ("md", "## Path 1 — `scale_variance_raster`\n\n"
+               "`num_levels=None` lets the package auto-pick "
+               "`floor(log_2(16)) + 1 = 5` levels. The `{2, 5, 8}` cell counts "
+               "are `64 / 128 / 64`, so the grand mean is exactly **5**, and "
+               "`TSS = 64·9 + 128·0 + 64·9 = 1152` — the paper's number."),
         (
             "code",
             "import warnings\n"
             "with warnings.catch_warnings():\n"
             "    warnings.simplefilter('ignore')  # numpy array carries no CRS — expected\n"
-            "    result = scale_variance_raster(raster, agg_fun='mean')\n"
+            "    raster_result = scale_variance_raster(raster, agg_fun='mean')\n"
             "\n"
-            "print(f'TSS        = {result.total_ss:.2f}')\n"
-            "print(f'grand_mean = {result.grand_mean:.4f}')\n"
-            "print(f'n_levels   = {result.n_levels}')\n"
-            "result.components.round(4)",
+            "print(f'TSS        = {raster_result.total_ss}')\n"
+            "print(f'total_df   = {raster_result.total_df}')\n"
+            "print(f'grand_mean = {raster_result.grand_mean}')\n"
+            "raster_result.components.round(6)",
         ),
         ("md", "## Plot the scale-variance lollipop\n\n"
-               "On a log x-axis the three structural peaks (4-pixel, 16-pixel, "
-               "64-pixel wavelengths) should be visible."),
+               "Two equal peaks at the finest and coarsest scales, zeros in "
+               "between — the structural fingerprint of two nested checkerboards."),
         (
             "code",
-            "fig, ax = plt.subplots(figsize=(8, 4))\n"
-            "comp = result.components\n"
-            "ax.vlines(comp['scale'], 0, comp['ss_share'], color='#333', linewidth=1.5)\n"
-            "ax.scatter(comp['scale'], comp['ss_share'], s=60, color='#4c78a8', zorder=3)\n"
-            "ax.set_xscale('log', base=2)\n"
+            "comp = raster_result.components\n"
+            "x = np.arange(len(comp))\n"
+            "fig, ax = plt.subplots(figsize=(7, 3.4))\n"
+            "ax.vlines(x, 0, comp['ss_share'], color='#222', linewidth=1.5)\n"
+            "ax.scatter(x, comp['ss_share'], s=70, color='#222', zorder=3)\n"
+            "for xi, yi in zip(x, comp['ss_share'], strict=True):\n"
+            "    if yi > 0:\n"
+            "        ax.text(xi, yi + 0.025, f'{yi*100:.0f}%', ha='center', fontsize=10)\n"
+            "ax.set_xticks(x)\n"
+            "ax.set_xticklabels([f\"{int(s)}\" for s in comp['scale']])\n"
             "ax.set_xlabel('scale (pixels)')\n"
-            "ax.set_ylabel('share of total variance')\n"
-            "ax.set_title('Scale variance — synthetic multi-scale raster')\n"
-            "ax.grid(True, which='both', alpha=0.2)\n"
-            "for _, row in comp.iterrows():\n"
-            "    ax.text(row['scale'], row['ss_share'] + 0.01, f\"{row['ss_share']*100:.0f}%\",\n"
-            "            ha='center', fontsize=8)\n"
+            "ax.set_yticks([])\n"
+            "ax.set_ylim(0, max(comp['ss_share']) * 1.35)\n"
+            "ax.axhline(0, color='#999', linewidth=0.6)\n"
+            "for s in ('top', 'right', 'left'):\n"
+            "    ax.spines[s].set_visible(False)\n"
+            "ax.spines['bottom'].set_visible(False)\n"
+            "ax.set_title('share of total variance by scale')\n"
             "fig.tight_layout()\n"
             "plt.show()",
         ),
-        ("md", "## Sanity checks\n\nThe same identities as the tabular case."),
+        ("md", "## Path 2 — `scale_variance` on the same data, flattened\n\n"
+               "Build a 256-row dataframe with one row per cell. `id_level1` is "
+               "the cell's row-major index; the parent IDs follow the 2× nested "
+               "blocking structure (`id_level{n+1}` groups together `2 × 2` "
+               "siblings of `id_level{n}`, on the level-`n` grid)."),
         (
             "code",
-            "assert abs(result.components['sum_squares'].sum() - result.total_ss) < 1e-7\n"
-            "assert result.components['df'].sum() == result.total_df\n"
-            "assert abs(result.components['ss_share'].sum() - 1.0) < 1e-10\n"
-            "'identities hold'",
+            "rows, cols = raster.shape\n"
+            "rr, cc = np.mgrid[0:rows, 0:cols]\n"
+            "tab = pd.DataFrame({\n"
+            "    'value':     raster.ravel(),\n"
+            "    'id_level1': (rr * cols + cc).ravel() + 1,\n"
+            "    'id_level2': ((rr // 2) * (cols // 2)  + (cc // 2)).ravel() + 1,\n"
+            "    'id_level3': ((rr // 4) * (cols // 4)  + (cc // 4)).ravel() + 1,\n"
+            "    'id_level4': ((rr // 8) * (cols // 8)  + (cc // 8)).ravel() + 1,\n"
+            "    'id_level5': np.ones(rows * cols, dtype=int),\n"
+            "})\n"
+            "tab.head()",
         ),
-        ("md", "## Optional: inspect the per-cell SVE rasters\n\n"
-               "Passing `return_sve=True` returns `sve` as a `(num_levels, nrow, ncol)` "
-               "numpy array — each band is the squared difference at one scale, mapped "
-               "back to the finest grid. Useful for visualizing **where** variance "
-               "accumulates at each scale."),
         (
             "code",
-            "with warnings.catch_warnings():\n"
-            "    warnings.simplefilter('ignore')\n"
-            "    result_sve = scale_variance_raster(raster, agg_fun='mean', return_sve=True)\n"
-            "\n"
-            "fig, axes = plt.subplots(2, 4, figsize=(12, 6))\n"
-            "for lvl, ax in enumerate(axes.ravel(), start=1):\n"
-            "    band = result_sve.sve[lvl-1]\n"
-            "    scale = result_sve.components.loc[lvl-1, 'scale']\n"
-            "    share = result_sve.components.loc[lvl-1, 'ss_share']\n"
-            "    im = ax.imshow(band, cmap='magma', origin='lower')\n"
-            "    ax.set_title(f'level {lvl} — scale={scale:.0f}\\n{share*100:.1f}% of TSS', fontsize=9)\n"
-            "    ax.set_xticks([]); ax.set_yticks([])\n"
-            "fig.suptitle('scale variance elements — squared differences per level')\n"
-            "fig.tight_layout()\n"
-            "plt.show()",
+            "tab_result = scale_variance(\n"
+            "    tab,\n"
+            "    value='value',\n"
+            "    id_cols=['id_level1', 'id_level2', 'id_level3', 'id_level4', 'id_level5'],\n"
+            "    agg_fun='mean',\n"
+            ")\n"
+            "print(f'TSS        = {tab_result.total_ss}')\n"
+            "print(f'total_df   = {tab_result.total_df}')\n"
+            "print(f'grand_mean = {tab_result.grand_mean}')\n"
+            "tab_result.components.round(6)",
+        ),
+        ("md", "## Both paths agree on every component\n\n"
+               "The tabular core has no notion of pixel size, so its `scale` "
+               "column is `NaN` (only the raster path knows the cell size). All "
+               "other columns — `sum_squares`, `df`, `mean_square`, `ss_share`, "
+               "`ms_share`, `ss_cumulative` — match exactly."),
+        (
+            "code",
+            "shared_cols = ['level', 'sum_squares', 'df', 'mean_square',\n"
+            "               'ss_share', 'ms_share', 'ss_cumulative']\n"
+            "pd.testing.assert_frame_equal(\n"
+            "    raster_result.components[shared_cols].reset_index(drop=True),\n"
+            "    tab_result.components[shared_cols].reset_index(drop=True),\n"
+            ")\n"
+            "'raster path == tabular path'",
+        ),
+        ("md", "## Sanity checks against the paper\n\n"
+               "Both paths must close the decomposition identity exactly, and "
+               "must reproduce Moellering & Tobler's published totals."),
+        (
+            "code",
+            "for label, res in [('raster', raster_result), ('tabular', tab_result)]:\n"
+            "    assert res.total_ss == 1152.0,           f'{label}: TSS != 1152'\n"
+            "    assert res.total_df == 255,              f'{label}: TDF != 255'\n"
+            "    assert res.grand_mean == 5.0,            f'{label}: grand_mean != 5'\n"
+            "    assert abs(res.components['sum_squares'].sum() - res.total_ss) < 1e-9\n"
+            "    assert res.components['df'].sum() == res.total_df\n"
+            "    assert abs(res.components['ss_share'].sum() - 1.0) < 1e-12\n"
+            "'all checks pass — matches the 1972 paper'",
         ),
     ]
     return _nb(title, cells)
@@ -382,7 +446,7 @@ def main() -> None:
     HERE.mkdir(exist_ok=True, parents=True)
     for name, builder in [
         ("01_tabular_admin.ipynb", build_tabular_admin),
-        ("02_raster_synthetic.ipynb", build_raster_synthetic),
+        ("02_raster_mt1972_fig3.ipynb", build_raster_mt1972_fig3),
         ("03_polygon_hierarchy.ipynb", build_polygon_hierarchy),
     ]:
         nb = builder()

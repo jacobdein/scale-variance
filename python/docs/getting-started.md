@@ -44,7 +44,7 @@ result.level_rasters     # dict of the aggregated rasters
 
 A geographic CRS (like EPSG:4326) is rejected with an `UnprojectedCRSError` — scale variance measures variance across *cell sizes*, which needs a projected CRS with linear units. A raster with no CRS at all is accepted with a warning; scales report in raw pixel units.
 
-Pass `return_sve=True` to also get a `(num_levels, nrow, ncol)` array of squared differences per level, mapped back to the finest grid — useful for visualizing *where* variance accumulates at each scale. The [raster example notebook](examples/02_raster_synthetic.ipynb) walks through this.
+Pass `return_sve=True` to also get a `(num_levels, nrow, ncol)` array of squared differences per level, mapped back to the finest grid — useful for visualizing *where* variance accumulates at each scale. The [raster example notebook](examples/02_raster_mt1972_fig3.ipynb) walks through the paper-canonical decomposition end-to-end.
 
 ### I have tabular data → [`scale_variance`](api.md#scalevar.scale_variance)
 
@@ -125,7 +125,7 @@ These are enforced inside the compute function — a violation raises rather tha
 ## Next
 
 - [Tabular admin example notebook](examples/01_tabular_admin.ipynb)
-- [Raster example notebook](examples/02_raster_synthetic.ipynb)
+- [Moellering & Tobler (1972) Figure 3 example notebook](examples/02_raster_mt1972_fig3.ipynb)
 - [Polygon-hierarchy example notebook](examples/03_polygon_hierarchy.ipynb)
 - [Full API reference](api.md)
 - [Theory](theory.md)

@@ -9,7 +9,7 @@ Ship-from-GitHub scope. No PyPI submission yet.
 - Raster-first entry point `scale_variance_raster` with configurable `base_level_factor` (2×, 3×, 4×, …) and configurable `agg_fun` (`mean`, `sum`, `median`, `modal`, …). Accepts `xarray.DataArray` and `numpy.ndarray`.
 - Optional spatial helpers `create_hbins` and `join_hbins` behind the `[spatial]` extra. Refuses unprojected CRSes (a deliberate fix relative to the original bird-diversity study code — see [`reference/polygon-R-implementation/crs-correction-note.txt`](reference/polygon-R-implementation/crs-correction-note.txt)).
 - Shared hand-derived fixture suite under `tests/fixtures/`: `fixture_mt1972_fig3` (gold standard — `TSS = 1152`, `TDF = 255` from the paper) and `fixture_irregular_admin` (ragged 3-level, hand-derived). Both ship with a `derivation.md`.
-- Three example notebooks: non-spatial tabular, raster synthetic multi-scale, polygon-hierarchy.
+- Three example notebooks: non-spatial tabular, Moellering & Tobler (1972) Figure 3 (raster + tabular), polygon-hierarchy.
 - `mkdocs-material` documentation site under `python/docs/`, deployed via GitHub Pages.
 - Python-only CI workflow running `pytest` + `ruff`.
 

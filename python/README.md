@@ -98,7 +98,7 @@ The paper-canonical variance share is `components.ss_share` (sums to 1). `compon
 - **Docs site**: <https://jacobdein.github.io/scale-variance/> (built from `python/docs/`, deployed via GitHub Pages).
 - **Example notebooks**: [`docs/examples/`](docs/examples/)
   - [`01_tabular_admin.ipynb`](docs/examples/01_tabular_admin.ipynb) — tabular admin hierarchy
-  - [`02_raster_synthetic.ipynb`](docs/examples/02_raster_synthetic.ipynb) — synthetic multi-scale raster with SVE visualizations
+  - [`02_raster_mt1972_fig3.ipynb`](docs/examples/02_raster_mt1972_fig3.ipynb) — Moellering & Tobler (1972) Figure 3, run through both the raster and tabular entry points
   - [`03_polygon_hierarchy.ipynb`](docs/examples/03_polygon_hierarchy.ipynb) — polygon hierarchy
 - **Top-level docs** — the language-agnostic theory, API contract, and parity testing plan:
   - [`../docs/theory.md`](../docs/theory.md)

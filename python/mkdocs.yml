@@ -93,7 +93,7 @@ nav:
   - Examples:
       - Overview: examples/index.md
       - "1. Tabular admin hierarchy": examples/01_tabular_admin.ipynb
-      - "2. Synthetic multi-scale raster": examples/02_raster_synthetic.ipynb
+      - "2. Moellering & Tobler (1972) Figure 3": examples/02_raster_mt1972_fig3.ipynb
       - "3. Polygon hierarchy": examples/03_polygon_hierarchy.ipynb
   - API reference: api.md
   - Theory: theory.md

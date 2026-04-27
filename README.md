@@ -2,6 +2,12 @@
 
 **Scale variance decomposition for hierarchical data.**
 
+<p align="center">
+  <img src="python/docs/_static/scalevar_hero.svg" alt="scalevar — 16×16 raster of {2, 5, 8} on the left, an arrow labeled scale_variance_raster, and a lollipop chart on the right showing 50% of variance at scale 1 and 50% at scale 8" width="720">
+  <br>
+  <sub>Worked example: Moellering &amp; Tobler (1972), Figure 3</sub>
+</p>
+
 `scalevar` partitions the total variance of a variable measured across a nested hierarchy into the share attributable to each level of that hierarchy. It is a direct implementation of the method introduced by Moellering and Tobler (1972), *Geographical Variances*.
 
 ## Status
