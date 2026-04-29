@@ -12,7 +12,9 @@ Web-Mercator incident that motivated this behavioral fix.
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
+
+import pandas as pd
 
 from scalevar._agg import resolve_agg_fun
 from scalevar.errors import UnprojectedCRSError
@@ -20,7 +22,6 @@ from scalevar.raster import _UNPROJECTED_CRS_MESSAGE
 
 if TYPE_CHECKING:
     import geopandas as gpd
-    import pandas as pd
 
 
 def _require_geopandas() -> Any:
@@ -180,7 +181,7 @@ def join_hbins(
         tab[col] = tab[col].astype(int)
 
     if value_col is None:
-        return tab.reset_index(drop=True)
+        return cast(pd.DataFrame, tab.reset_index(drop=True))
 
     agg_callable, _ = resolve_agg_fun(agg_fun)
     agg_map = tab.groupby(f"id_level_{levels[0]}", sort=False)[value_col].apply(
@@ -193,4 +194,4 @@ def join_hbins(
         .drop(columns=[value_col])
     )
     per_cell[value_col] = agg_map
-    return per_cell.reset_index()
+    return cast(pd.DataFrame, per_cell.reset_index())
