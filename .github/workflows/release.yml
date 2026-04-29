@@ -1,0 +1,143 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to (re)release, e.g. v0.1.0"
+        required: true
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Resolve tag
+        id: tag
+        working-directory: ${{ github.workspace }}
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            tag="${{ github.event.inputs.tag }}"
+          else
+            tag="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Version-consistency gate
+        env:
+          TAG_VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          py_version=$(python -c "import tomllib; print(tomllib.loads(open('pyproject.toml','rb').read().decode())['project']['version'])")
+          init_version=$(python -c "import re,sys; m=re.search(r'__version__\\s*=\\s*[\"\\']([^\"\\']+)[\"\\']', open('src/scalevar/__init__.py').read()); print(m.group(1) if m else sys.exit('no __version__ in __init__.py'))")
+          echo "tag        = $TAG_VERSION"
+          echo "pyproject  = $py_version"
+          echo "__init__   = $init_version"
+          if [ "$TAG_VERSION" != "$py_version" ] || [ "$TAG_VERSION" != "$init_version" ]; then
+            echo "::error::Version mismatch — tag=$TAG_VERSION pyproject=$py_version __init__=$init_version"
+            exit 1
+          fi
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build sdist + wheel
+        run: python -m build
+
+      - name: Smoke-install in clean venv
+        env:
+          TAG_VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          wheel=$(ls dist/scalevar-*-py3-none-any.whl | head -n1)
+          echo "Smoke-installing $wheel"
+          python -m venv /tmp/smoke
+          /tmp/smoke/bin/pip install --upgrade pip
+          /tmp/smoke/bin/pip install "$wheel"
+          /tmp/smoke/bin/python -c "
+          import os
+          import scalevar
+          tag = os.environ['TAG_VERSION']
+          assert scalevar.__version__ == tag, f'installed __version__={scalevar.__version__!r} != tag {tag!r}'
+          from scalevar import scale_variance, ScaleVarianceResult
+          import pandas as pd
+          df = pd.DataFrame({'a': [1,2,3,4], 'b': [1,1,2,2], 'v': [10.0,20.0,30.0,40.0]})
+          r = scale_variance(df, value='v', id_cols=['a','b'])
+          assert isinstance(r, ScaleVarianceResult)
+          assert r.n_levels == 2
+          assert abs(r.total_ss - 500.0) < 1e-9
+          print(f'smoke OK: scalevar=={scalevar.__version__}, TSS={r.total_ss:.1f}')
+          "
+
+      - name: Compute SHA-256 of artefacts
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum *.whl *.tar.gz | tee SHA256SUMS
+
+      - name: Extract release notes from CHANGELOG.md
+        id: notes
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          notes_file="$RUNNER_TEMP/release_notes.md"
+          if [ -f CHANGELOG.md ]; then
+            awk -v tag="$TAG" '
+              $0 ~ "^## \\[" tag "\\]" { capture=1; print; next }
+              capture && /^## \[/      { exit }
+              capture                  { print }
+            ' CHANGELOG.md > "$notes_file"
+          fi
+          if [ ! -s "$notes_file" ]; then
+            echo "No section for $TAG in CHANGELOG.md — falling back to auto-generated notes."
+            echo "use_generate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_generate=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "notes_file=$notes_file" >> "$GITHUB_OUTPUT"
+
+      - name: Create / update GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          NOTES_FILE: ${{ steps.notes.outputs.notes_file }}
+          USE_GENERATE: ${{ steps.notes.outputs.use_generate }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" python/dist/* --clobber
+          else
+            if [ "$USE_GENERATE" = "true" ]; then
+              gh release create "$TAG" --title "$TAG" --generate-notes python/dist/*
+            else
+              gh release create "$TAG" --title "$TAG" --notes-file "$NOTES_FILE" python/dist/*
+            fi
+          fi

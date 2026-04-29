@@ -279,7 +279,7 @@ def _from_xarray(da: Any) -> tuple[NDArray[np.float64], float, Any, str]:
     crs: Any = None
     res: float = 1.0
     try:
-        rio = squeezed.rio  # type: ignore[attr-defined]
+        rio = squeezed.rio
     except AttributeError:
         warnings.warn(_NO_CRS_WARNING, UserWarning, stacklevel=3)
         return arr, res, None, "xarray"

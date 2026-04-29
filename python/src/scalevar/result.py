@@ -84,4 +84,5 @@ class ScaleVarianceResult:
             f"grand_mean={self.grand_mean:.6g}, "
             f"agg_fun={self.agg_fun!r}</p>"
         )
-        return header + self.components.to_html(index=False, float_format="%.6g")
+        body = self.components.to_html(index=False, float_format=lambda x: f"{x:.6g}")
+        return header + (body or "")
