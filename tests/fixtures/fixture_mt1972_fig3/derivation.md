@@ -150,6 +150,11 @@ These are the exact expected values committed in `expected_components.csv`
 and `expected_totals.json`. Any implementation that disagrees with them on
 this input has a bug.
 
+`raster.npy` is a derived artifact built from `input.tif` by
+`tests/fixtures/_build_npy.py`; the `.tif` remains the source of truth for
+parity tests. The `.npy` exists so the WASM-deployed playground can load the
+fixture without `rasterio`/GDAL.
+
 ## References
 
 - Moellering, H., & Tobler, W. (1972). Geographical Variances. *Geographical Analysis*, 4(1), 34–50. See page numbers surrounding Figure 3.
