@@ -20,7 +20,7 @@ classifiers = [
 ]
 dependencies = [
     "scalevar",
-    "marimo>=0.9",
+    "marimo>=0.16,<0.20",
     "numpy>=1.24",
     "pandas>=2.0",
     "matplotlib>=3.7",
@@ -37,3 +37,8 @@ packages = ["src/playground"]
 # installs all resolve it from the working tree.
 [tool.uv.sources]
 scalevar = { path = "../python", editable = true }
+
+[dependency-groups]
+dev = [
+    "build>=1.5.0",
+]

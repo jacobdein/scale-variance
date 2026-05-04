@@ -8,8 +8,35 @@ a side-channel data file. The inline literal matches
 
 import marimo
 
-__generated_with = "0.9.0"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
+
+
+@app.cell
+def _setup():
+    import marimo as mo
+    return (mo,)
+
+
+@app.cell
+async def _install_scalevar():
+    # scalevar is not on PyPI in v0.1; install the wheel that ships next to
+    # the playground bundle. In production this URL points at the GitHub
+    # Release wheel (read from playground-manifest.json); for local dev the
+    # wheel lives at ./scalevar-0.1.0-py3-none-any.whl in the same dist/.
+    import sys
+
+    if sys.platform == "emscripten":
+        import js
+        import micropip
+
+        # The cell runs inside pyodide's web worker; js.location there points
+        # at the worker script (/assets/worker-*.js), not the page. Use the
+        # origin and a server-root path so the resolved URL is independent of
+        # where the worker bundle lives.
+        wheel_url = f"{js.location.origin}/scalevar-0.1.0-py3-none-any.whl"
+        await micropip.install(wheel_url)
+    return
 
 
 @app.cell(hide_code=True)
@@ -27,7 +54,7 @@ def _intro(mo):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _imports():
     import warnings
 
@@ -39,10 +66,8 @@ def _imports():
     return np, plt, scale_variance_raster, warnings
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _fixture(np):
-    # MT1972 Figure 3, 16x16, values {2, 5, 8}.
-    # Inlined to keep the WASM bundle self-contained.
     raster = np.array(
         [
             [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],
@@ -67,7 +92,7 @@ def _fixture(np):
     return (raster,)
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _controls(mo):
     base_level_factor = mo.ui.slider(
         start=2, stop=4, step=1, value=2, label="base_level_factor"
@@ -77,8 +102,13 @@ def _controls(mo):
         value="mean",
         label="agg_fun",
     )
-    mo.hstack([base_level_factor, agg_fun], justify="start")
     return agg_fun, base_level_factor
+
+
+@app.cell
+def _controls_view(agg_fun, base_level_factor, mo):
+    mo.hstack([base_level_factor, agg_fun], justify="start")
+    return
 
 
 @app.cell
@@ -105,21 +135,21 @@ def _summary(mo, result):
 
 @app.cell
 def _raster_plot(np, plt, raster):
-    fig, ax = plt.subplots(figsize=(4.0, 4.0))
+    raster_fig, raster_ax = plt.subplots(figsize=(4.0, 4.0))
     palette = {2: "#0072B2", 5: "#F0E442", 8: "#D55E00"}
     rgb = np.zeros(raster.shape + (3,))
     for v, hexcol in palette.items():
         c = np.array([int(hexcol[i : i + 2], 16) for i in (1, 3, 5)]) / 255.0
         rgb[raster == v] = c
-    ax.imshow(rgb, interpolation="nearest")
+    raster_ax.imshow(rgb, interpolation="nearest")
     for k in range(17):
-        ax.axhline(k - 0.5, color="white", lw=0.4, alpha=0.6)
-        ax.axvline(k - 0.5, color="white", lw=0.4, alpha=0.6)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    ax.set_title("MT1972 Figure 3 — 16×16, values {2, 5, 8}")
-    fig.tight_layout()
-    fig
+        raster_ax.axhline(k - 0.5, color="white", lw=0.4, alpha=0.6)
+        raster_ax.axvline(k - 0.5, color="white", lw=0.4, alpha=0.6)
+    raster_ax.set_xticks([])
+    raster_ax.set_yticks([])
+    raster_ax.set_title("MT1972 Figure 3 — 16×16, values {2, 5, 8}")
+    raster_fig.tight_layout()
+    raster_fig
     return
 
 
@@ -127,27 +157,27 @@ def _raster_plot(np, plt, raster):
 def _lollipop(np, plt, result):
     comp = result.components
     x = np.arange(len(comp))
-    fig, ax = plt.subplots(figsize=(7, 3.4))
-    ax.vlines(x, 0, comp["ss_share"], color="#222", linewidth=1.5)
-    ax.scatter(x, comp["ss_share"], s=70, color="#222", zorder=3)
+    lol_fig, lol_ax = plt.subplots(figsize=(7, 3.4))
+    lol_ax.vlines(x, 0, comp["ss_share"], color="#222", linewidth=1.5)
+    lol_ax.scatter(x, comp["ss_share"], s=70, color="#222", zorder=3)
     for xi, yi in zip(x, comp["ss_share"], strict=True):
         if yi > 0:
-            ax.text(xi, yi + 0.025, f"{yi * 100:.0f}%", ha="center", fontsize=10)
-    ax.set_xticks(x)
-    ax.set_xticklabels(
+            lol_ax.text(xi, yi + 0.025, f"{yi * 100:.0f}%", ha="center", fontsize=10)
+    lol_ax.set_xticks(x)
+    lol_ax.set_xticklabels(
         [f"{int(s)}" if not np.isnan(s) else "—" for s in comp["scale"]]
     )
-    ax.set_xlabel("scale (pixels)")
-    ax.set_yticks([])
+    lol_ax.set_xlabel("scale (pixels)")
+    lol_ax.set_yticks([])
     ymax = max(comp["ss_share"].max(), 0.05) * 1.35
-    ax.set_ylim(0, ymax)
-    ax.axhline(0, color="#999", linewidth=0.6)
+    lol_ax.set_ylim(0, ymax)
+    lol_ax.axhline(0, color="#999", linewidth=0.6)
     for s in ("top", "right", "left"):
-        ax.spines[s].set_visible(False)
-    ax.spines["bottom"].set_visible(False)
-    ax.set_title("share of total variance by scale")
-    fig.tight_layout()
-    fig
+        lol_ax.spines[s].set_visible(False)
+    lol_ax.spines["bottom"].set_visible(False)
+    lol_ax.set_title("share of total variance by scale")
+    lol_fig.tight_layout()
+    lol_fig
     return
 
 
