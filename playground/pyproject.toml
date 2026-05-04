@@ -31,3 +31,9 @@ dev = ["pytest>=7"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/playground"]
+
+# Local dev: scalevar isn't on PyPI in v0.1 (per CLAUDE.md). Point uv/pip
+# at the sibling python/ package so `uv run`, `uv sync`, and editable
+# installs all resolve it from the working tree.
+[tool.uv.sources]
+scalevar = { path = "../python", editable = true }

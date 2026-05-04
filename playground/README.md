@@ -17,19 +17,21 @@ is an app.
 
 ## Develop locally
 
+`scalevar` is not on PyPI in v0.1 (CLAUDE.md). `pyproject.toml` declares it as
+a `[tool.uv.sources]` editable path reference to the sibling `../python/`, so
+`uv sync` resolves it from the working tree.
+
 ```sh
 cd playground
-python -m venv .venv && source .venv/bin/activate
-pip install -e ../python
-pip install -e .
-marimo edit notebooks/mt1972_explorable.py
+uv sync
+uv run marimo edit notebooks/mt1972_explorable.py
 ```
 
-## Build the WASM artifact
+## Build and serve the WASM artifact
 
 ```sh
-bash scripts/export_wasm.sh
-python -m http.server --directory dist
+uv run bash scripts/export_wasm.sh
+uv run python -m http.server --directory dist
 ```
 
 Open <http://localhost:8000>.
