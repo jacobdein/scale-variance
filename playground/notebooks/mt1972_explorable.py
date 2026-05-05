@@ -121,8 +121,16 @@ def _controls(mo):
     base_level_factor = mo.ui.slider(
         start=2, stop=4, step=1, value=2, label="base_level_factor"
     )
+    # agg_fun is the paper-canonical 'mean' on v0.1 — it's the only choice
+    # that preserves the closure identity Σ SS_n = TSS that the whole
+    # decomposition rests on. Other aggregations (sum / median / modal /
+    # min / max / sd / var) are valid library inputs but break the paper's
+    # construction; they belong in a v0.2 sandbox with caveats, not the
+    # first-encounter explorable. We keep agg_fun as a labeled control so
+    # the parameter is *visible* (the snippet emits agg_fun='mean'), just
+    # not editable on this fixture.
     agg_fun = mo.ui.dropdown(
-        options=["mean", "sum", "median"],
+        options=["mean"],
         value="mean",
         label="agg_fun",
     )
@@ -137,23 +145,52 @@ def _controls_view(agg_fun, base_level_factor, mo):
 
 @app.cell
 def _compute(agg_fun, base_level_factor, raster, scale_variance_raster, warnings):
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")  # numpy array carries no CRS — expected
-        result = scale_variance_raster(
-            raster,
-            base_level_factor=base_level_factor.value,
-            agg_fun=agg_fun.value,
+    result = None
+    compute_error = None
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")  # numpy array carries no CRS
+            result = scale_variance_raster(
+                raster,
+                base_level_factor=base_level_factor.value,
+                agg_fun=agg_fun.value,
+            )
+    except RuntimeError as exc:
+        # scalevar raises when Σ SS_n ≠ TSS (CLAUDE.md: violations are
+        # bugs, not tolerated drift). For agg_fun other than 'mean' this
+        # is the expected outcome; surface a banner instead of locking
+        # the lollipop on stale state.
+        compute_error = (
+            f"scalevar could not decompose this raster with "
+            f"base_level_factor={base_level_factor.value}, "
+            f"agg_fun={agg_fun.value!r}: {exc}. Only mean aggregation "
+            "preserves the paper's decomposition identity (Σ SS_n = TSS) "
+            "on this fixture."
         )
-    return (result,)
+    return compute_error, result
+
+
+@app.cell
+def _compute_error_banner(compute_error, mo):
+    summary = (
+        mo.callout(compute_error, kind="warn") if compute_error else None
+    )
+    summary
+    return
 
 
 @app.cell
 def _summary(mo, result):
-    mo.md(
-        f"**TSS** = {result.total_ss:.1f} &nbsp;&nbsp; "
-        f"**total_df** = {result.total_df} &nbsp;&nbsp; "
-        f"**grand_mean** = {result.grand_mean:.3f}"
+    out = (
+        mo.md(
+            f"**TSS** = {result.total_ss:.1f} &nbsp;&nbsp; "
+            f"**total_df** = {result.total_df} &nbsp;&nbsp; "
+            f"**grand_mean** = {result.grand_mean:.3f}"
+        )
+        if result is not None
+        else None
     )
+    out
     return
 
 
@@ -179,35 +216,46 @@ def _raster_plot(np, plt, raster):
 
 @app.cell
 def _lollipop(np, plt, result):
-    comp = result.components
-    x = np.arange(len(comp))
-    lol_fig, lol_ax = plt.subplots(figsize=(7, 3.4))
-    lol_ax.vlines(x, 0, comp["ss_share"], color="#222", linewidth=1.5)
-    lol_ax.scatter(x, comp["ss_share"], s=70, color="#222", zorder=3)
-    for xi, yi in zip(x, comp["ss_share"], strict=True):
-        if yi > 0:
-            lol_ax.text(xi, yi + 0.025, f"{yi * 100:.0f}%", ha="center", fontsize=10)
-    lol_ax.set_xticks(x)
-    lol_ax.set_xticklabels(
-        [f"{int(s)}" if not np.isnan(s) else "—" for s in comp["scale"]]
-    )
-    lol_ax.set_xlabel("scale (pixels)")
-    lol_ax.set_yticks([])
-    ymax = max(comp["ss_share"].max(), 0.05) * 1.35
-    lol_ax.set_ylim(0, ymax)
-    lol_ax.axhline(0, color="#999", linewidth=0.6)
-    for s in ("top", "right", "left"):
-        lol_ax.spines[s].set_visible(False)
-    lol_ax.spines["bottom"].set_visible(False)
-    lol_ax.set_title("share of total variance by scale")
-    lol_fig.tight_layout()
-    lol_fig
+    if result is None:
+        out = None
+    else:
+        comp = result.components
+        x = np.arange(len(comp))
+        lol_fig, lol_ax = plt.subplots(figsize=(7, 3.4))
+        lol_ax.vlines(x, 0, comp["ss_share"], color="#222", linewidth=1.5)
+        lol_ax.scatter(x, comp["ss_share"], s=70, color="#222", zorder=3)
+        for xi, yi in zip(x, comp["ss_share"], strict=True):
+            if yi > 0:
+                lol_ax.text(
+                    xi, yi + 0.025, f"{yi * 100:.0f}%", ha="center", fontsize=10
+                )
+        lol_ax.set_xticks(x)
+        lol_ax.set_xticklabels(
+            [f"{int(s)}" if not np.isnan(s) else "—" for s in comp["scale"]]
+        )
+        lol_ax.set_xlabel("scale (pixels)")
+        lol_ax.set_yticks([])
+        ymax = max(comp["ss_share"].max(), 0.05) * 1.35
+        lol_ax.set_ylim(0, ymax)
+        lol_ax.axhline(0, color="#999", linewidth=0.6)
+        for s in ("top", "right", "left"):
+            lol_ax.spines[s].set_visible(False)
+        lol_ax.spines["bottom"].set_visible(False)
+        lol_ax.set_title("share of total variance by scale")
+        lol_fig.tight_layout()
+        out = lol_fig
+    out
     return
 
 
 @app.cell
 def _components_table(mo, result):
-    mo.ui.table(result.components.round(6), selection=None)
+    out = (
+        mo.ui.table(result.components.round(6), selection=None)
+        if result is not None
+        else None
+    )
+    out
     return
 
 
@@ -255,7 +303,12 @@ def _appendix(
     show_appendix,
     state,
 ):
-    if not show_appendix.value:
+    if result is None:
+        appendix = mo.md(
+            r"_Methods Appendix is unavailable while the decomposition cannot "
+            r"be computed (see banner above)._"
+        )
+    elif not show_appendix.value:
         appendix = mo.md(
             r"_Set parameters above, then click **Generate Methods Appendix** "
             r"for a paste-ready Python snippet, paper-language interpretation, "
