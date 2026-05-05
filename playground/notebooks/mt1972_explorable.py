@@ -26,6 +26,7 @@ async def _install_scalevar():
     # wheel lives at ./scalevar-0.1.0-py3-none-any.whl in the same dist/.
     import sys
 
+    install_log = ""
     if sys.platform == "emscripten":
         import js
         import micropip
@@ -34,8 +35,31 @@ async def _install_scalevar():
         # at the worker script (/assets/worker-*.js), not the page. Use the
         # origin and a server-root path so the resolved URL is independent of
         # where the worker bundle lives.
-        wheel_url = f"{js.location.origin}/scalevar-0.1.0-py3-none-any.whl"
-        await micropip.install(wheel_url)
+        origin = js.location.origin
+        try:
+            await micropip.install(f"{origin}/scalevar-0.1.0-py3-none-any.whl")
+            install_log += "scalevar installed; "
+        except Exception as exc:
+            install_log += f"scalevar FAILED: {exc!r}; "
+        try:
+            # playground depends on scalevar + stdlib only; deps=False keeps
+            # micropip from chasing marimo / matplotlib / etc.
+            await micropip.install(
+                f"{origin}/scalevar_playground-0.1.0-py3-none-any.whl",
+                deps=False,
+            )
+            install_log += "playground installed."
+        except Exception as exc:
+            install_log += f"playground FAILED: {exc!r}."
+    return (install_log,)
+
+
+@app.cell(hide_code=True)
+def _install_log_view(install_log, mo):
+    # Show a status line only if something failed; on the happy path,
+    # render nothing so the page lands on the title.
+    bad = "FAILED" in install_log if install_log else False
+    mo.callout(install_log, kind="danger") if bad else None
     return
 
 
@@ -184,6 +208,92 @@ def _lollipop(np, plt, result):
 @app.cell
 def _components_table(mo, result):
     mo.ui.table(result.components.round(6), selection=None)
+    return
+
+
+@app.cell
+def _playground_imports():
+    from playground import (
+        generate_code_snippet,
+        interpret_result,
+        permalink,
+    )
+
+    return generate_code_snippet, interpret_result, permalink
+
+
+@app.cell
+def _current_state(agg_fun, base_level_factor):
+    state = {
+        "base_level_factor": base_level_factor.value,
+        "agg_fun": agg_fun.value,
+        "scalevar_version": "0.1.0",
+        "preset": None,
+    }
+    return (state,)
+
+
+@app.cell
+def _appendix_button(mo):
+    show_appendix = mo.ui.run_button(label="Generate Methods Appendix")
+    return (show_appendix,)
+
+
+@app.cell
+def _appendix_button_view(show_appendix):
+    show_appendix
+    return
+
+
+@app.cell
+def _appendix(
+    generate_code_snippet,
+    interpret_result,
+    mo,
+    permalink,
+    result,
+    show_appendix,
+    state,
+):
+    if not show_appendix.value:
+        appendix = mo.md(
+            r"_Set parameters above, then click **Generate Methods Appendix** "
+            r"for a paste-ready Python snippet, paper-language interpretation, "
+            r"and a permalink to share this exact view._"
+        )
+    else:
+        snippet = generate_code_snippet(state)
+        interpretation = interpret_result(result, state)
+        url = permalink(state)
+        bibtex = (
+            "@article{moellering1972,\n"
+            "  author  = {Moellering, Harold and Tobler, Waldo},\n"
+            "  title   = {Geographical Variances},\n"
+            "  journal = {Geographical Analysis},\n"
+            "  volume  = {4}, number = {1}, pages = {34--50}, year = {1972}\n"
+            "}"
+        )
+        appendix = mo.vstack(
+            [
+                mo.md("### Methods Appendix"),
+                mo.md(f"**Interpretation.** {interpretation}"),
+                mo.md("**Python (paste into your thesis or a notebook):**"),
+                mo.md(f"```python\n{snippet}\n```"),
+                mo.md(f"**Permalink:** [`{url}`]({url})"),
+                mo.accordion(
+                    {
+                        "Cite the original paper (BibTeX)": mo.md(
+                            f"```bibtex\n{bibtex}\n```"
+                        ),
+                        "Questions or bug reports": mo.md(
+                            "Open an issue: "
+                            "<https://github.com/jacobdein/scale-variance/issues>"
+                        ),
+                    }
+                ),
+            ]
+        )
+    appendix
     return
 
 

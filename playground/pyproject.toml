@@ -41,4 +41,5 @@ scalevar = { path = "../python", editable = true }
 [dependency-groups]
 dev = [
     "build>=1.5.0",
+    "pytest>=9.0.3",
 ]

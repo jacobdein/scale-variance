@@ -15,9 +15,10 @@ mkdir -p "$OUT_DIR"
 
 marimo export html-wasm "$NOTEBOOK" -o "$OUT_DIR" --mode run --force
 
-# Build a fresh scalevar wheel and stage it next to the bundle.
+# Build fresh scalevar + playground wheels and stage them next to the bundle.
 python -m build --wheel "$REPO/python" --outdir "$OUT_DIR" >/dev/null
-ls "$OUT_DIR"/scalevar-*.whl
+python -m build --wheel "$HERE" --outdir "$OUT_DIR" >/dev/null
+ls "$OUT_DIR"/scalevar-*.whl "$OUT_DIR"/scalevar_playground-*.whl
 
 echo
 echo "Bundle written to: $OUT_DIR"
