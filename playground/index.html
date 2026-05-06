@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <!-- Preload is necessary because we show these images when we disconnect from the server,
+    but at that point we cannot load these images from the server -->
+    <link rel="preload" href="./assets/gradient-yHQUC_QB.png" as="image" />
+    <link rel="preload" href="./assets/noise-60BoTA8O.png" as="image" />
+    <!-- Preload the fonts -->
+    <link rel="preload" href="./assets/Lora-VariableFont_wght-CZceb_kH.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Regular-Bam3NpBI.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Bold-C_DwAp7Z.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Regular-CEsLFVD9.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Medium-D5MAsWEG.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Bold-C6PDArdf.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="a marimo app" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <script data-marimo="true">
+      function __resizeIframe(obj) {
+        const scrollbarHeight = 20; // Max between windows, mac, and linux
+
+        function setHeight() {
+          // Guard against race condition where iframe isn't ready
+          if (!obj.contentWindow?.document?.documentElement) {
+            return;
+          }
+          const element = obj.contentWindow.document.documentElement;
+          // If there is no vertical scrollbar, we don't need to resize the iframe
+          if (element.scrollHeight === element.clientHeight) {
+            return;
+          }
+
+          // Create a new height that includes the scrollbar height if it's visible
+          const hasHorizontalScrollbar = element.scrollWidth > element.clientWidth;
+          const newHeight = element.scrollHeight + (hasHorizontalScrollbar ? scrollbarHeight : 0);
+
+          // Only update the height if it's different from the current height
+          if (obj.style.height !== `${newHeight}px`) {
+            obj.style.height = `${newHeight}px`;
+          }
+        }
+
+        // Resize the iframe to the height of the content and bottom scrollbar height
+        setHeight();
+
+        // Resize the iframe when the content changes
+        const resizeObserver = new ResizeObserver((_entries) => {
+          setHeight();
+        });
+        // Only observe if iframe content is ready
+        if (obj.contentWindow?.document?.body) {
+          resizeObserver.observe(obj.contentWindow.document.body);
+        }
+      }
+    </script>
+    <marimo-filename hidden>notebook.py</marimo-filename>
+    <!-- TODO(Trevor): Legacy, required by VS Code plugin. Remove when plugin is updated (see marimo/server/_templates/template.py) -->
+    <marimo-version data-version="{{ version }}" hidden></marimo-version>
+    <marimo-user-config data-config="{{ user_config }}" hidden></marimo-user-config>
+    <marimo-server-token data-token="{{ server_token }}" hidden></marimo-server-token>
+    <!-- /TODO -->
+    <title>mt1972 explorable</title>
+    <script type="module" crossorigin src="./assets/index-CL4WR8q8.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/preload-helper-DItdS47A.js">
+    <link rel="modulepreload" crossorigin href="./assets/chunk-LvLJmgfZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-Bj1aDYRI.js">
+    <link rel="modulepreload" crossorigin href="./assets/compiler-runtime-B3qBwwSJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/jsx-runtime-BqBOg78p.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEventListener-BR0C1MaI.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-YteS-k_t.js">
+    <link rel="modulepreload" crossorigin href="./assets/precisionRound-C3fmBb6j.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-B6z1Qyqt.js">
+    <link rel="modulepreload" crossorigin href="./assets/vega-loader.browser-BegSZk0G.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-CGtUbqcR.js">
+    <link rel="modulepreload" crossorigin href="./assets/clsx-Dz_KRrWq.js">
+    <link rel="modulepreload" crossorigin href="./assets/cn-DCUzRj2J.js">
+    <link rel="modulepreload" crossorigin href="./assets/badge-C7-HR1IO.js">
+    <link rel="modulepreload" crossorigin href="./assets/button-D9nb17Rw.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-dom-CSu739Rf.js">
+    <link rel="modulepreload" crossorigin href="./assets/fullscreen-BDxedMYP.js">
+    <link rel="modulepreload" crossorigin href="./assets/menu-items-CwUpDHG7.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BoOh2kN5.js">
+    <link rel="modulepreload" crossorigin href="./assets/createLucideIcon-D5guW7EU.js">
+    <link rel="modulepreload" crossorigin href="./assets/check-BH35Ndha.js">
+    <link rel="modulepreload" crossorigin href="./assets/x-C-6liIBr.js">
+    <link rel="modulepreload" crossorigin href="./assets/select-5i7URBEn.js">
+    <link rel="modulepreload" crossorigin href="./assets/tooltip-Gcwqb_SK.js">
+    <link rel="modulepreload" crossorigin href="./assets/use-toast-T0_cQDma.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEvent-D91BmmQi.js">
+    <link rel="modulepreload" crossorigin href="./assets/invariant-BUdrueMv.js">
+    <link rel="modulepreload" crossorigin href="./assets/isObject-DvLSfCY5.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseFor-DKD1r8uL.js">
+    <link rel="modulepreload" crossorigin href="./assets/merge-_9WLTEyt.js">
+    <link rel="modulepreload" crossorigin href="./assets/zod-H_cgTO0M.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-DIGrmLDO.js">
+    <link rel="modulepreload" crossorigin href="./assets/Deferred-DMWKlZOV.js">
+    <link rel="modulepreload" crossorigin href="./assets/uuid-DercMavo.js">
+    <link rel="modulepreload" crossorigin href="./assets/DeferredRequestRegistry-CUzZ0y7K.js">
+    <link rel="modulepreload" crossorigin href="./assets/constants-DMpttj8Q.js">
+    <link rel="modulepreload" crossorigin href="./assets/session-VtovaFBS.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-DczIUz0b.js">
+    <link rel="modulepreload" crossorigin href="./assets/requests-DIwGYs0l.js">
+    <link rel="modulepreload" crossorigin href="./assets/useLifecycle-DieWOfXE.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNonce-DfoVjkkH.js">
+    <link rel="modulepreload" crossorigin href="./assets/useTheme-Cb4Wekek.js">
+    <link rel="modulepreload" crossorigin href="./assets/arrays-DYDL-3-i.js">
+    <link rel="modulepreload" crossorigin href="./assets/strings-md4mFbOQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/once-DRroIaBz.js">
+    <link rel="modulepreload" crossorigin href="./assets/capabilities-C_FLIcjP.js">
+    <link rel="modulepreload" crossorigin href="./assets/createReducer-1ePoj7v6.js">
+    <link rel="modulepreload" crossorigin href="./assets/paths-BXWH6vv4.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BrR4M-k3.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-HlsDto3K.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CHcznzB-.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-VjDnmGCZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-E6ttb8td.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DBiqbYe-.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DQOq2Tf-.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-B324sPca.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-C9ZB41s2.js">
+    <link rel="modulepreload" crossorigin href="./assets/stex-CtmkcLz7.js">
+    <link rel="modulepreload" crossorigin href="./assets/toDate-B5A0DFEz.js">
+    <link rel="modulepreload" crossorigin href="./assets/purify.es-DBmVz-Wl.js">
+    <link rel="modulepreload" crossorigin href="./assets/cjs-BRGiG41H.js">
+    <link rel="modulepreload" crossorigin href="./assets/isSymbol-BT6B8Bon.js">
+    <link rel="modulepreload" crossorigin href="./assets/now-CsYTPAhW.js">
+    <link rel="modulepreload" crossorigin href="./assets/debounce-DhnxH9Rh.js">
+    <link rel="modulepreload" crossorigin href="./assets/database-zap-kIkTfzTX.js">
+    <link rel="modulepreload" crossorigin href="./assets/main-B0OX4z33.js">
+    <link rel="modulepreload" crossorigin href="./assets/cells-CcBfzJ1Z.js">
+    <link rel="modulepreload" crossorigin href="./assets/ErrorBoundary-DzYV_VeY.js">
+    <link rel="modulepreload" crossorigin href="./assets/kbd-B3Breaz2.js">
+    <link rel="modulepreload" crossorigin href="./assets/useInstallPackage-D0NLybAx.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-dialog-BGBdrcqJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/dialog-Dj0qTFnG.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDebounce-CLMpJfhX.js">
+    <link rel="modulepreload" crossorigin href="./assets/numbers-CAW8yjzj.js">
+    <link rel="modulepreload" crossorigin href="./assets/SSRProvider-kyGHZp36.js">
+    <link rel="modulepreload" crossorigin href="./assets/context-B3MsQb-b.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNumberFormatter-DtiQW2H_.js">
+    <link rel="modulepreload" crossorigin href="./assets/usePress-CfcdTqJM.js">
+    <link rel="modulepreload" crossorigin href="./assets/input-BX98vgAu.js">
+    <link rel="modulepreload" crossorigin href="./assets/ImperativeModal-D7lQ0Q7_.js">
+    <link rel="modulepreload" crossorigin href="./assets/cell-link-BRdZl0OJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/multi-map-rafH3cg3.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-DvqcBMUv.js">
+    <link rel="modulepreload" crossorigin href="./assets/chevron-right-CG5QYXYk.js">
+    <link rel="modulepreload" crossorigin href="./assets/dropdown-menu-D1A3cFC8.js">
+    <link rel="modulepreload" crossorigin href="./assets/links-Dpap8NI2.js">
+    <link rel="modulepreload" crossorigin href="./assets/useRunCells-CgXnbA14.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-BCF-tANo.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-BwrPA9zQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-icon-BYNydU7b.js">
+    <link rel="modulepreload" crossorigin href="./assets/RenderHTML-8cI8zL5y.js">
+    <link rel="modulepreload" crossorigin href="./assets/datasource-Czm_KBfK.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-DCT6JLba.js">
+    <link rel="modulepreload" crossorigin href="./assets/sparkles-CZ5WmLPA.js">
+    <link rel="modulepreload" crossorigin href="./assets/MarimoErrorOutput-Dbk0HqOA.js">
+    <link rel="modulepreload" crossorigin href="./assets/spinner-Bhir8k53.js">
+    <link rel="modulepreload" crossorigin href="./assets/html-to-image-BHdf1t5J.js">
+    <link rel="modulepreload" crossorigin href="./assets/focus-CXQpR65O.js">
+    <link rel="modulepreload" crossorigin href="./assets/useAsyncData-BFC6lWG9.js">
+    <link rel="modulepreload" crossorigin href="./assets/LazyAnyLanguageCodeMirror-BF3xpDgO.js">
+    <link rel="modulepreload" crossorigin href="./assets/micromark-factory-space-DzSMahmM.js">
+    <link rel="modulepreload" crossorigin href="./assets/chunk-5FQGJX7Z-e_arGD4o.js">
+    <link rel="modulepreload" crossorigin href="./assets/markdown-renderer-DmnGXdCp.js">
+    <link rel="modulepreload" crossorigin href="./assets/command-CBCkexpx.js">
+    <link rel="modulepreload" crossorigin href="./assets/popover-UExmgBsf.js">
+    <link rel="modulepreload" crossorigin href="./assets/errors-TZBmrJmc.js">
+    <link rel="modulepreload" crossorigin href="./assets/download-YUQiaxS9.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-DPyRV1LT.js">
+    <link rel="modulepreload" crossorigin href="./assets/useIframeCapabilities-BvE4n6hj.js">
+    <link rel="modulepreload" crossorigin href="./assets/error-banner-C6aBa98y.js">
+    <link rel="modulepreload" crossorigin href="./assets/formats-Dsc8AdCp.js">
+    <link rel="modulepreload" crossorigin href="./assets/en-US-D_il4jD7.js">
+    <link rel="modulepreload" crossorigin href="./assets/isValid-C8T5uJYI.js">
+    <link rel="modulepreload" crossorigin href="./assets/dates-CAlnO9QB.js">
+    <link rel="modulepreload" crossorigin href="./assets/maps-C48Oksn0.js">
+    <link rel="modulepreload" crossorigin href="./assets/extends-B2LJnKU3.js">
+    <link rel="modulepreload" crossorigin href="./assets/emotion-is-prop-valid.esm-DD4AwVTU.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDateFormatter-CgFoBhVq.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-icons.esm-D9xfKaPZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-6NxtGaCm.js">
+    <link rel="modulepreload" crossorigin href="./assets/ellipsis-KAhMaCIV.js">
+    <link rel="modulepreload" crossorigin href="./assets/message-circle-CWm2KnSx.js">
+    <link rel="modulepreload" crossorigin href="./assets/trash-2-CKlZA04n.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-resizable-panels.browser.esm-BUNcfKXO.js">
+    <link rel="modulepreload" crossorigin href="./assets/JsonOutput-02ehjjSC.js">
+    <link rel="modulepreload" crossorigin href="./assets/chart-no-axes-column-nqk474t8.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-function-D1dlJvD8.js">
+    <link rel="modulepreload" crossorigin href="./assets/spec-Cq8FVoTf.js">
+    <link rel="modulepreload" crossorigin href="./assets/ellipsis-vertical-CkwWkOQL.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-cw-DHwG4Mac.js">
+    <link rel="modulepreload" crossorigin href="./assets/tree-actions-Ci3CV3hN.js">
+    <link rel="modulepreload" crossorigin href="./assets/components-DVKf_7RU.js">
+    <link rel="modulepreload" crossorigin href="./assets/column-preview-rDM8Q-wn.js">
+    <link rel="modulepreload" crossorigin href="./assets/icons-D9TuFTJG.js">
+    <link rel="modulepreload" crossorigin href="./assets/radio-group-6t7ozlnG.js">
+    <link rel="modulepreload" crossorigin href="./assets/floating-outline-BtNnv2IX.js">
+    <link rel="modulepreload" crossorigin href="./assets/objectWithoutPropertiesLoose-DaPAPabU.js">
+    <link rel="modulepreload" crossorigin href="./assets/esm-BmrwxxCo.js">
+    <link rel="modulepreload" crossorigin href="./assets/eye-off-n1Li95bE.js">
+    <link rel="modulepreload" crossorigin href="./assets/plus-BgB18UzY.js">
+    <link rel="modulepreload" crossorigin href="./assets/readonly-python-code-JBCsN3-9.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-headphone-BrQspHac.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-BrdxGLRX.js">
+    <link rel="modulepreload" crossorigin href="./assets/image-DQHXdEQn.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-icons-CMxkj_kV.js">
+    <link rel="modulepreload" crossorigin href="./assets/switch-ecwOrzz3.js">
+    <link rel="modulepreload" crossorigin href="./assets/events-BRAWQiYK.js">
+    <link rel="modulepreload" crossorigin href="./assets/globals-B-ZMi0ZU.js">
+    <link rel="modulepreload" crossorigin href="./assets/share-DIVpiHPe.js">
+    <link rel="modulepreload" crossorigin href="./assets/blob-D-eV0cU3.js">
+    <link rel="modulepreload" crossorigin href="./assets/memoize-Tp7rARFe.js">
+    <link rel="modulepreload" crossorigin href="./assets/get-C-qh_et5.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseSet-CxV9N1bc.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-DGoUR-mM.js">
+    <link rel="modulepreload" crossorigin href="./assets/label-DTR8T0AE.js">
+    <link rel="modulepreload" crossorigin href="./assets/textarea-BI_mXP9w.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-ccw-C-n2VFP5.js">
+    <link rel="modulepreload" crossorigin href="./assets/form-EgPmt17c.js">
+    <link rel="modulepreload" crossorigin href="./assets/renderShortcut-DZpkrZaP.js">
+    <link rel="modulepreload" crossorigin href="./assets/field-BrLPDxsA.js">
+    <link rel="modulepreload" crossorigin href="./assets/RSPContexts-CINae4Gg.js">
+    <link rel="modulepreload" crossorigin href="./assets/useBoolean-B_vDzBHf.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDeepCompareMemoize-D0WTlCXt.js">
+    <link rel="modulepreload" crossorigin href="./assets/types-W8WWuumF.js">
+    <link rel="modulepreload" crossorigin href="./assets/fileToBase64-Bzn96tYq.js">
+    <link rel="modulepreload" crossorigin href="./assets/pathUtils-DOhgNpTR.js">
+    <link rel="modulepreload" crossorigin href="./assets/prop-types-BiQYf0aU.js">
+    <link rel="modulepreload" crossorigin href="./assets/es-DaYh1PsD.js">
+    <link rel="modulepreload" crossorigin href="./assets/hasIn-DiS_ryrS.js">
+    <link rel="modulepreload" crossorigin href="./assets/flatten-Dl4V1ub3.js">
+    <link rel="modulepreload" crossorigin href="./assets/pick-DqWUNly1.js">
+    <link rel="modulepreload" crossorigin href="./assets/code-xml-CZN6vNxu.js">
+    <link rel="modulepreload" crossorigin href="./assets/house-mGK3v0Mm.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-DMaNzePN.js">
+    <link rel="modulepreload" crossorigin href="./assets/triangle-alert-B8l157gP.js">
+    <link rel="modulepreload" crossorigin href="./assets/bundle.esm-BIoPrMH_.js">
+    <link rel="stylesheet" crossorigin href="./assets/cells-jmgGt1lS.css">
+    <link rel="stylesheet" crossorigin href="./assets/markdown-renderer-DdDKmWlR.css">
+    <link rel="stylesheet" crossorigin href="./assets/JsonOutput-B7vuddcd.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-DH5UUBE4.css">
+  <marimo-wasm hidden=""></marimo-wasm>
+    <script>
+        if (window.location.protocol === 'file:') {
+            alert('Warning: This file must be served by an HTTP server to function correctly.');
+        }
+    </script>
+    
+    <style>
+        #save-button {
+            display: none !important;
+        }
+        #filename-input {
+            display: none !important;
+        }
+    </style>
+    
+<script data-marimo="true">
+    Object.defineProperty(window, "__MARIMO_EXPORT_CONTEXT__", {
+        value: Object.freeze({
+            trusted: true,
+            notebookCode: "\"\"\"scalevar playground \u2014 MT1972 Figure 3 explorable.\n\nMarimo notebook exported to WASM at scalevar.io/playground.\nThe fixture array is inlined so the WASM bundle does not have to ship\na side-channel data file. The inline literal matches\n``tests/fixtures/fixture_mt1972_fig3/raster.npy`` (verified: TSS=1152, TDF=255).\n\"\"\"\n\nimport marimo\n\n__generated_with = \"0.23.5\"\napp = marimo.App(width=\"medium\")\n\n\n@app.cell\ndef _setup():\n    import marimo as mo\n\n    return (mo,)\n\n\n@app.cell\nasync def _install_scalevar():\n    # scalevar is not on PyPI in v0.1; install the wheel that ships next to\n    # the playground bundle. In production this URL points at the GitHub\n    # Release wheel (read from playground-manifest.json); for local dev the\n    # wheel lives at ./scalevar-0.1.1-py3-none-any.whl in the same dist/.\n    import sys\n\n    install_log = \"\"\n    if sys.platform == \"emscripten\":\n        import js\n        import micropip\n\n        # The cell runs inside pyodide's web worker. js.location.href there\n        # is the worker URL, e.g.:\n        #   https://jacobdein.github.io/scale-variance/playground/assets/worker-XXX.js\n        # The wheels we want sit alongside the page (one level up from\n        # /assets/), so derive the playground base by stripping /assets/...\n        # off the worker URL. Doing this against origin alone breaks on\n        # GitHub Pages project subpaths \u2014 origin is github.io, not\n        # github.io/\u003Crepo\u003E/playground.\n        playground_base = js.location.href.rsplit(\"/assets/\", 1)[0]\n        try:\n            await micropip.install(\n                f\"{playground_base}/scalevar-0.1.1-py3-none-any.whl\"\n            )\n            install_log += \"scalevar installed; \"\n        except Exception as exc:\n            install_log += f\"scalevar FAILED: {exc!r}; \"\n        try:\n            # playground depends on scalevar + stdlib only; deps=False keeps\n            # micropip from chasing marimo / matplotlib / etc.\n            await micropip.install(\n                f\"{playground_base}/scalevar_playground-0.1.1-py3-none-any.whl\",\n                deps=False,\n            )\n            install_log += \"playground installed.\"\n        except Exception as exc:\n            install_log += f\"playground FAILED: {exc!r}.\"\n    return (install_log,)\n\n\n@app.cell(hide_code=True)\ndef _install_log_view(install_log, mo):\n    # Show a status line only if something failed; on the happy path,\n    # render nothing so the page lands on the title.\n    bad = \"FAILED\" in install_log if install_log else False\n    mo.callout(install_log, kind=\"danger\") if bad else None\n    return\n\n\n@app.cell(hide_code=True)\ndef _intro(mo):\n    mo.md(r\"\"\"\n    # Scale variance \u2014 Moellering \u0026 Tobler (1972), Figure 3\n\n    Drag the sliders. Watch the lollipop reshape. The 16\u00d716 raster is the\n    same checkerboard-of-checkerboards used in the original 1972 paper.\n    With `base_level_factor=2` and `agg_fun='mean'` the playground reproduces\n    the paper's published totals (`TSS = 1152`, `TDF = 255`) exactly.\n    \"\"\")\n    return\n\n\n@app.cell\ndef _imports():\n    import warnings\n\n    import matplotlib.pyplot as plt\n    import numpy as np\n\n    from scalevar import scale_variance_raster\n\n    return np, plt, scale_variance_raster, warnings\n\n\n@app.cell\ndef _fixture(np):\n    raster = np.array(\n        [\n            [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n            [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n            [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n            [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n            [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n            [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n            [2, 5, 2, 5, 2, 5, 2, 5, 5, 8, 5, 8, 5, 8, 5, 8],\n            [5, 2, 5, 2, 5, 2, 5, 2, 8, 5, 8, 5, 8, 5, 8, 5],\n            [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n            [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n            [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n            [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n            [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n            [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n            [5, 8, 5, 8, 5, 8, 5, 8, 2, 5, 2, 5, 2, 5, 2, 5],\n            [8, 5, 8, 5, 8, 5, 8, 5, 5, 2, 5, 2, 5, 2, 5, 2],\n        ],\n        dtype=float,\n    )\n    return (raster,)\n\n\n@app.cell\ndef _controls(mo):\n    base_level_factor = mo.ui.slider(\n        start=2, stop=4, step=1, value=2, label=\"base_level_factor\"\n    )\n    # agg_fun is the paper-canonical 'mean' on v0.1 \u2014 it's the only choice\n    # that preserves the closure identity \u03a3 SS_n = TSS that the whole\n    # decomposition rests on. Other aggregations (sum / median / modal /\n    # min / max / sd / var) are valid library inputs but break the paper's\n    # construction; they belong in a v0.2 sandbox with caveats, not the\n    # first-encounter explorable. We keep agg_fun as a labeled control so\n    # the parameter is *visible* (the snippet emits agg_fun='mean'), just\n    # not editable on this fixture.\n    agg_fun = mo.ui.dropdown(\n        options=[\"mean\"],\n        value=\"mean\",\n        label=\"agg_fun\",\n    )\n    return agg_fun, base_level_factor\n\n\n@app.cell\ndef _controls_view(agg_fun, base_level_factor, mo):\n    mo.hstack([base_level_factor, agg_fun], justify=\"start\")\n    return\n\n\n@app.cell\ndef _compute(\n    agg_fun,\n    base_level_factor,\n    raster,\n    scale_variance_raster,\n    warnings,\n):\n    result = None\n    compute_error = None\n    try:\n        with warnings.catch_warnings():\n            warnings.simplefilter(\"ignore\")  # numpy array carries no CRS\n            result = scale_variance_raster(\n                raster,\n                base_level_factor=base_level_factor.value,\n                agg_fun=agg_fun.value,\n            )\n    except RuntimeError as exc:\n        # scalevar raises when \u03a3 SS_n \u2260 TSS (CLAUDE.md: violations are\n        # bugs, not tolerated drift). For agg_fun other than 'mean' this\n        # is the expected outcome; surface a banner instead of locking\n        # the lollipop on stale state.\n        compute_error = (\n            f\"scalevar could not decompose this raster with \"\n            f\"base_level_factor={base_level_factor.value}, \"\n            f\"agg_fun={agg_fun.value!r}: {exc}. Only mean aggregation \"\n            \"preserves the paper's decomposition identity (\u03a3 SS_n = TSS) \"\n            \"on this fixture.\"\n        )\n    return compute_error, result\n\n\n@app.cell\ndef _compute_error_banner(compute_error, mo):\n    summary = (\n        mo.callout(compute_error, kind=\"warn\") if compute_error else None\n    )\n    summary\n    return\n\n\n@app.cell\ndef _summary(mo, result):\n    summary_view = (\n        mo.md(\n            f\"**TSS** = {result.total_ss:.1f} \u0026nbsp;\u0026nbsp; \"\n            f\"**total_df** = {result.total_df} \u0026nbsp;\u0026nbsp; \"\n            f\"**grand_mean** = {result.grand_mean:.3f}\"\n        )\n        if result is not None\n        else None\n    )\n    summary_view\n    return\n\n\n@app.cell\ndef _raster_plot(np, plt, raster):\n    raster_fig, raster_ax = plt.subplots(figsize=(4.0, 4.0))\n    palette = {2: \"#0072B2\", 5: \"#F0E442\", 8: \"#D55E00\"}\n    rgb = np.zeros(raster.shape + (3,))\n    for v, hexcol in palette.items():\n        c = np.array([int(hexcol[i : i + 2], 16) for i in (1, 3, 5)]) / 255.0\n        rgb[raster == v] = c\n    raster_ax.imshow(rgb, interpolation=\"nearest\")\n    for k in range(17):\n        raster_ax.axhline(k - 0.5, color=\"white\", lw=0.4, alpha=0.6)\n        raster_ax.axvline(k - 0.5, color=\"white\", lw=0.4, alpha=0.6)\n    raster_ax.set_xticks([])\n    raster_ax.set_yticks([])\n    raster_ax.set_title(\"MT1972 Figure 3 \u2014 16\u00d716, values {2, 5, 8}\")\n    raster_fig.tight_layout()\n    raster_fig\n    return\n\n\n@app.cell\ndef _lollipop(np, plt, result):\n    if result is None:\n        lollipop_view = None\n    else:\n        comp = result.components\n        x = np.arange(len(comp))\n        lol_fig, lol_ax = plt.subplots(figsize=(7, 3.4))\n        lol_ax.vlines(x, 0, comp[\"ss_share\"], color=\"#222\", linewidth=1.5)\n        lol_ax.scatter(x, comp[\"ss_share\"], s=70, color=\"#222\", zorder=3)\n        for xi, yi in zip(x, comp[\"ss_share\"], strict=True):\n            if yi \u003E 0:\n                lol_ax.text(\n                    xi, yi + 0.025, f\"{yi * 100:.0f}%\", ha=\"center\", fontsize=10\n                )\n        lol_ax.set_xticks(x)\n        lol_ax.set_xticklabels(\n            [f\"{int(s)}\" if not np.isnan(s) else \"\u2014\" for s in comp[\"scale\"]]\n        )\n        lol_ax.set_xlabel(\"scale (pixels)\")\n        lol_ax.set_yticks([])\n        ymax = max(comp[\"ss_share\"].max(), 0.05) * 1.35\n        lol_ax.set_ylim(0, ymax)\n        lol_ax.axhline(0, color=\"#999\", linewidth=0.6)\n        for s in (\"top\", \"right\", \"left\"):\n            lol_ax.spines[s].set_visible(False)\n        lol_ax.spines[\"bottom\"].set_visible(False)\n        lol_ax.set_title(\"share of total variance by scale\")\n        lol_fig.tight_layout()\n        lollipop_view = lol_fig\n    lollipop_view\n    return\n\n\n@app.cell\ndef _components_table(mo, result):\n    components_view = (\n        mo.ui.table(result.components.round(6), selection=None)\n        if result is not None\n        else None\n    )\n    components_view\n    return\n\n\n@app.cell\ndef _playground_imports():\n    from playground import (\n        generate_code_snippet,\n        interpret_result,\n        permalink,\n    )\n\n    return generate_code_snippet, interpret_result, permalink\n\n\n@app.cell\ndef _current_state(agg_fun, base_level_factor):\n    state = {\n        \"base_level_factor\": base_level_factor.value,\n        \"agg_fun\": agg_fun.value,\n        \"scalevar_version\": \"0.1.0\",\n        \"preset\": None,\n    }\n    return (state,)\n\n\n@app.cell\ndef _appendix_button(mo):\n    show_appendix = mo.ui.run_button(label=\"Generate Methods Appendix\")\n    return (show_appendix,)\n\n\n@app.cell\ndef _appendix_button_view(show_appendix):\n    show_appendix\n    return\n\n\n@app.cell\ndef _appendix(\n    generate_code_snippet,\n    interpret_result,\n    mo,\n    permalink,\n    result,\n    show_appendix,\n    state,\n):\n    if result is None:\n        appendix = mo.md(\n            r\"_Methods Appendix is unavailable while the decomposition cannot \"\n            r\"be computed (see banner above)._\"\n        )\n    elif not show_appendix.value:\n        appendix = mo.md(\n            r\"_Set parameters above, then click **Generate Methods Appendix** \"\n            r\"for a paste-ready Python snippet, paper-language interpretation, \"\n            r\"and a permalink to share this exact view._\"\n        )\n    else:\n        snippet = generate_code_snippet(state)\n        interpretation = interpret_result(result, state)\n        url = permalink(state)\n        bibtex = (\n            \"@article{moellering1972,\\n\"\n            \"  author  = {Moellering, Harold and Tobler, Waldo},\\n\"\n            \"  title   = {Geographical Variances},\\n\"\n            \"  journal = {Geographical Analysis},\\n\"\n            \"  volume  = {4}, number = {1}, pages = {34--50}, year = {1972}\\n\"\n            \"}\"\n        )\n        appendix = mo.vstack(\n            [\n                mo.md(\"### Methods Appendix\"),\n                mo.md(f\"**Interpretation.** {interpretation}\"),\n                mo.md(\"**Python (paste into your thesis or a notebook):**\"),\n                mo.md(f\"```python\\n{snippet}\\n```\"),\n                mo.md(f\"**Permalink:** [`{url}`]({url})\"),\n                mo.accordion(\n                    {\n                        \"Cite the original paper (BibTeX)\": mo.md(\n                            f\"```bibtex\\n{bibtex}\\n```\"\n                        ),\n                        \"Questions or bug reports\": mo.md(\n                            \"Open an issue: \"\n                            \"\u003Chttps://github.com/jacobdein/scale-variance/issues\u003E\"\n                        ),\n                    }\n                ),\n            ]\n        )\n    appendix\n    return\n\n\n@app.cell(hide_code=True)\ndef _footer(mo):\n    mo.md(r\"\"\"\n    ---\n    Source: Moellering, H., \u0026 Tobler, W. (1972). *Geographical Variances*.\n    *Geographical Analysis* 4(1), 34\u201350. The decomposition is computed by\n    [`scalevar`](https://github.com/jacobdein/scale-variance) running entirely\n    in your browser via Pyodide; nothing is sent to a server.\n    \"\"\")\n    return\n\n\nif __name__ == \"__main__\":\n    app.run()\n",
+        }),
+        writable: false,
+        configurable: false,
+    });
+</script>
+<marimo-code hidden="">%22%22%22scalevar%20playground%20%E2%80%94%20MT1972%20Figure%203%20explorable.%0A%0AMarimo%20notebook%20exported%20to%20WASM%20at%20scalevar.io%2Fplayground.%0AThe%20fixture%20array%20is%20inlined%20so%20the%20WASM%20bundle%20does%20not%20have%20to%20ship%0Aa%20side-channel%20data%20file.%20The%20inline%20literal%20matches%0A%60%60tests%2Ffixtures%2Ffixture_mt1972_fig3%2Fraster.npy%60%60%20(verified%3A%20TSS%3D1152%2C%20TDF%3D255).%0A%22%22%22%0A%0Aimport%20marimo%0A%0A__generated_with%20%3D%20%220.23.5%22%0Aapp%20%3D%20marimo.App(width%3D%22medium%22)%0A%0A%0A%40app.cell%0Adef%20_setup()%3A%0A%20%20%20%20import%20marimo%20as%20mo%0A%0A%20%20%20%20return%20(mo%2C)%0A%0A%0A%40app.cell%0Aasync%20def%20_install_scalevar()%3A%0A%20%20%20%20%23%20scalevar%20is%20not%20on%20PyPI%20in%20v0.1%3B%20install%20the%20wheel%20that%20ships%20next%20to%0A%20%20%20%20%23%20the%20playground%20bundle.%20In%20production%20this%20URL%20points%20at%20the%20GitHub%0A%20%20%20%20%23%20Release%20wheel%20(read%20from%20playground-manifest.json)%3B%20for%20local%20dev%20the%0A%20%20%20%20%23%20wheel%20lives%20at%20.%2Fscalevar-0.1.1-py3-none-any.whl%20in%20the%20same%20dist%2F.%0A%20%20%20%20import%20sys%0A%0A%20%20%20%20install_log%20%3D%20%22%22%0A%20%20%20%20if%20sys.platform%20%3D%3D%20%22emscripten%22%3A%0A%20%20%20%20%20%20%20%20import%20js%0A%20%20%20%20%20%20%20%20import%20micropip%0A%0A%20%20%20%20%20%20%20%20%23%20The%20cell%20runs%20inside%20pyodide's%20web%20worker.%20js.location.href%20there%0A%20%20%20%20%20%20%20%20%23%20is%20the%20worker%20URL%2C%20e.g.%3A%0A%20%20%20%20%20%20%20%20%23%20%20%20https%3A%2F%2Fjacobdein.github.io%2Fscale-variance%2Fplayground%2Fassets%2Fworker-XXX.js%0A%20%20%20%20%20%20%20%20%23%20The%20wheels%20we%20want%20sit%20alongside%20the%20page%20(one%20level%20up%20from%0A%20%20%20%20%20%20%20%20%23%20%2Fassets%2F)%2C%20so%20derive%20the%20playground%20base%20by%20stripping%20%2Fassets%2F...%0A%20%20%20%20%20%20%20%20%23%20off%20the%20worker%20URL.%20Doing%20this%20against%20origin%20alone%20breaks%20on%0A%20%20%20%20%20%20%20%20%23%20GitHub%20Pages%20project%20subpaths%20%E2%80%94%20origin%20is%20github.io%2C%20not%0A%20%20%20%20%20%20%20%20%23%20github.io%2F%3Crepo%3E%2Fplayground.%0A%20%20%20%20%20%20%20%20playground_base%20%3D%20js.location.href.rsplit(%22%2Fassets%2F%22%2C%201)%5B0%5D%0A%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20await%20micropip.install(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20f%22%7Bplayground_base%7D%2Fscalevar-0.1.1-py3-none-any.whl%22%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20%20%20%20%20install_log%20%2B%3D%20%22scalevar%20installed%3B%20%22%0A%20%20%20%20%20%20%20%20except%20Exception%20as%20exc%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20install_log%20%2B%3D%20f%22scalevar%20FAILED%3A%20%7Bexc!r%7D%3B%20%22%0A%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20playground%20depends%20on%20scalevar%20%2B%20stdlib%20only%3B%20deps%3DFalse%20keeps%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20micropip%20from%20chasing%20marimo%20%2F%20matplotlib%20%2F%20etc.%0A%20%20%20%20%20%20%20%20%20%20%20%20await%20micropip.install(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20f%22%7Bplayground_base%7D%2Fscalevar_playground-0.1.1-py3-none-any.whl%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20deps%3DFalse%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20%20%20%20%20install_log%20%2B%3D%20%22playground%20installed.%22%0A%20%20%20%20%20%20%20%20except%20Exception%20as%20exc%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20install_log%20%2B%3D%20f%22playground%20FAILED%3A%20%7Bexc!r%7D.%22%0A%20%20%20%20return%20(install_log%2C)%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_install_log_view(install_log%2C%20mo)%3A%0A%20%20%20%20%23%20Show%20a%20status%20line%20only%20if%20something%20failed%3B%20on%20the%20happy%20path%2C%0A%20%20%20%20%23%20render%20nothing%20so%20the%20page%20lands%20on%20the%20title.%0A%20%20%20%20bad%20%3D%20%22FAILED%22%20in%20install_log%20if%20install_log%20else%20False%0A%20%20%20%20mo.callout(install_log%2C%20kind%3D%22danger%22)%20if%20bad%20else%20None%0A%20%20%20%20return%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_intro(mo)%3A%0A%20%20%20%20mo.md(r%22%22%22%0A%20%20%20%20%23%20Scale%20variance%20%E2%80%94%20Moellering%20%26%20Tobler%20(1972)%2C%20Figure%203%0A%0A%20%20%20%20Drag%20the%20sliders.%20Watch%20the%20lollipop%20reshape.%20The%2016%C3%9716%20raster%20is%20the%0A%20%20%20%20same%20checkerboard-of-checkerboards%20used%20in%20the%20original%201972%20paper.%0A%20%20%20%20With%20%60base_level_factor%3D2%60%20and%20%60agg_fun%3D'mean'%60%20the%20playground%20reproduces%0A%20%20%20%20the%20paper's%20published%20totals%20(%60TSS%20%3D%201152%60%2C%20%60TDF%20%3D%20255%60)%20exactly.%0A%20%20%20%20%22%22%22)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_imports()%3A%0A%20%20%20%20import%20warnings%0A%0A%20%20%20%20import%20matplotlib.pyplot%20as%20plt%0A%20%20%20%20import%20numpy%20as%20np%0A%0A%20%20%20%20from%20scalevar%20import%20scale_variance_raster%0A%0A%20%20%20%20return%20np%2C%20plt%2C%20scale_variance_raster%2C%20warnings%0A%0A%0A%40app.cell%0Adef%20_fixture(np)%3A%0A%20%20%20%20raster%20%3D%20np.array(%0A%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B2%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B2%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B2%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B2%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B8%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B8%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B8%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B5%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B8%2C%205%2C%208%2C%205%2C%208%2C%205%2C%208%2C%205%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%2C%205%2C%202%5D%2C%0A%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20dtype%3Dfloat%2C%0A%20%20%20%20)%0A%20%20%20%20return%20(raster%2C)%0A%0A%0A%40app.cell%0Adef%20_controls(mo)%3A%0A%20%20%20%20base_level_factor%20%3D%20mo.ui.slider(%0A%20%20%20%20%20%20%20%20start%3D2%2C%20stop%3D4%2C%20step%3D1%2C%20value%3D2%2C%20label%3D%22base_level_factor%22%0A%20%20%20%20)%0A%20%20%20%20%23%20agg_fun%20is%20the%20paper-canonical%20'mean'%20on%20v0.1%20%E2%80%94%20it's%20the%20only%20choice%0A%20%20%20%20%23%20that%20preserves%20the%20closure%20identity%20%CE%A3%20SS_n%20%3D%20TSS%20that%20the%20whole%0A%20%20%20%20%23%20decomposition%20rests%20on.%20Other%20aggregations%20(sum%20%2F%20median%20%2F%20modal%20%2F%0A%20%20%20%20%23%20min%20%2F%20max%20%2F%20sd%20%2F%20var)%20are%20valid%20library%20inputs%20but%20break%20the%20paper's%0A%20%20%20%20%23%20construction%3B%20they%20belong%20in%20a%20v0.2%20sandbox%20with%20caveats%2C%20not%20the%0A%20%20%20%20%23%20first-encounter%20explorable.%20We%20keep%20agg_fun%20as%20a%20labeled%20control%20so%0A%20%20%20%20%23%20the%20parameter%20is%20*visible*%20(the%20snippet%20emits%20agg_fun%3D'mean')%2C%20just%0A%20%20%20%20%23%20not%20editable%20on%20this%20fixture.%0A%20%20%20%20agg_fun%20%3D%20mo.ui.dropdown(%0A%20%20%20%20%20%20%20%20options%3D%5B%22mean%22%5D%2C%0A%20%20%20%20%20%20%20%20value%3D%22mean%22%2C%0A%20%20%20%20%20%20%20%20label%3D%22agg_fun%22%2C%0A%20%20%20%20)%0A%20%20%20%20return%20agg_fun%2C%20base_level_factor%0A%0A%0A%40app.cell%0Adef%20_controls_view(agg_fun%2C%20base_level_factor%2C%20mo)%3A%0A%20%20%20%20mo.hstack(%5Bbase_level_factor%2C%20agg_fun%5D%2C%20justify%3D%22start%22)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_compute(%0A%20%20%20%20agg_fun%2C%0A%20%20%20%20base_level_factor%2C%0A%20%20%20%20raster%2C%0A%20%20%20%20scale_variance_raster%2C%0A%20%20%20%20warnings%2C%0A)%3A%0A%20%20%20%20result%20%3D%20None%0A%20%20%20%20compute_error%20%3D%20None%0A%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20with%20warnings.catch_warnings()%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20warnings.simplefilter(%22ignore%22)%20%20%23%20numpy%20array%20carries%20no%20CRS%0A%20%20%20%20%20%20%20%20%20%20%20%20result%20%3D%20scale_variance_raster(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20raster%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20base_level_factor%3Dbase_level_factor.value%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20agg_fun%3Dagg_fun.value%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20except%20RuntimeError%20as%20exc%3A%0A%20%20%20%20%20%20%20%20%23%20scalevar%20raises%20when%20%CE%A3%20SS_n%20%E2%89%A0%20TSS%20(CLAUDE.md%3A%20violations%20are%0A%20%20%20%20%20%20%20%20%23%20bugs%2C%20not%20tolerated%20drift).%20For%20agg_fun%20other%20than%20'mean'%20this%0A%20%20%20%20%20%20%20%20%23%20is%20the%20expected%20outcome%3B%20surface%20a%20banner%20instead%20of%20locking%0A%20%20%20%20%20%20%20%20%23%20the%20lollipop%20on%20stale%20state.%0A%20%20%20%20%20%20%20%20compute_error%20%3D%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22scalevar%20could%20not%20decompose%20this%20raster%20with%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22base_level_factor%3D%7Bbase_level_factor.value%7D%2C%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22agg_fun%3D%7Bagg_fun.value!r%7D%3A%20%7Bexc%7D.%20Only%20mean%20aggregation%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22preserves%20the%20paper's%20decomposition%20identity%20(%CE%A3%20SS_n%20%3D%20TSS)%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22on%20this%20fixture.%22%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20return%20compute_error%2C%20result%0A%0A%0A%40app.cell%0Adef%20_compute_error_banner(compute_error%2C%20mo)%3A%0A%20%20%20%20summary%20%3D%20(%0A%20%20%20%20%20%20%20%20mo.callout(compute_error%2C%20kind%3D%22warn%22)%20if%20compute_error%20else%20None%0A%20%20%20%20)%0A%20%20%20%20summary%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_summary(mo%2C%20result)%3A%0A%20%20%20%20summary_view%20%3D%20(%0A%20%20%20%20%20%20%20%20mo.md(%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22**TSS**%20%3D%20%7Bresult.total_ss%3A.1f%7D%20%26nbsp%3B%26nbsp%3B%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22**total_df**%20%3D%20%7Bresult.total_df%7D%20%26nbsp%3B%26nbsp%3B%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20f%22**grand_mean**%20%3D%20%7Bresult.grand_mean%3A.3f%7D%22%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20if%20result%20is%20not%20None%0A%20%20%20%20%20%20%20%20else%20None%0A%20%20%20%20)%0A%20%20%20%20summary_view%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_raster_plot(np%2C%20plt%2C%20raster)%3A%0A%20%20%20%20raster_fig%2C%20raster_ax%20%3D%20plt.subplots(figsize%3D(4.0%2C%204.0))%0A%20%20%20%20palette%20%3D%20%7B2%3A%20%22%230072B2%22%2C%205%3A%20%22%23F0E442%22%2C%208%3A%20%22%23D55E00%22%7D%0A%20%20%20%20rgb%20%3D%20np.zeros(raster.shape%20%2B%20(3%2C))%0A%20%20%20%20for%20v%2C%20hexcol%20in%20palette.items()%3A%0A%20%20%20%20%20%20%20%20c%20%3D%20np.array(%5Bint(hexcol%5Bi%20%3A%20i%20%2B%202%5D%2C%2016)%20for%20i%20in%20(1%2C%203%2C%205)%5D)%20%2F%20255.0%0A%20%20%20%20%20%20%20%20rgb%5Braster%20%3D%3D%20v%5D%20%3D%20c%0A%20%20%20%20raster_ax.imshow(rgb%2C%20interpolation%3D%22nearest%22)%0A%20%20%20%20for%20k%20in%20range(17)%3A%0A%20%20%20%20%20%20%20%20raster_ax.axhline(k%20-%200.5%2C%20color%3D%22white%22%2C%20lw%3D0.4%2C%20alpha%3D0.6)%0A%20%20%20%20%20%20%20%20raster_ax.axvline(k%20-%200.5%2C%20color%3D%22white%22%2C%20lw%3D0.4%2C%20alpha%3D0.6)%0A%20%20%20%20raster_ax.set_xticks(%5B%5D)%0A%20%20%20%20raster_ax.set_yticks(%5B%5D)%0A%20%20%20%20raster_ax.set_title(%22MT1972%20Figure%203%20%E2%80%94%2016%C3%9716%2C%20values%20%7B2%2C%205%2C%208%7D%22)%0A%20%20%20%20raster_fig.tight_layout()%0A%20%20%20%20raster_fig%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_lollipop(np%2C%20plt%2C%20result)%3A%0A%20%20%20%20if%20result%20is%20None%3A%0A%20%20%20%20%20%20%20%20lollipop_view%20%3D%20None%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20comp%20%3D%20result.components%0A%20%20%20%20%20%20%20%20x%20%3D%20np.arange(len(comp))%0A%20%20%20%20%20%20%20%20lol_fig%2C%20lol_ax%20%3D%20plt.subplots(figsize%3D(7%2C%203.4))%0A%20%20%20%20%20%20%20%20lol_ax.vlines(x%2C%200%2C%20comp%5B%22ss_share%22%5D%2C%20color%3D%22%23222%22%2C%20linewidth%3D1.5)%0A%20%20%20%20%20%20%20%20lol_ax.scatter(x%2C%20comp%5B%22ss_share%22%5D%2C%20s%3D70%2C%20color%3D%22%23222%22%2C%20zorder%3D3)%0A%20%20%20%20%20%20%20%20for%20xi%2C%20yi%20in%20zip(x%2C%20comp%5B%22ss_share%22%5D%2C%20strict%3DTrue)%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20yi%20%3E%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20lol_ax.text(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20xi%2C%20yi%20%2B%200.025%2C%20f%22%7Byi%20*%20100%3A.0f%7D%25%22%2C%20ha%3D%22center%22%2C%20fontsize%3D10%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20lol_ax.set_xticks(x)%0A%20%20%20%20%20%20%20%20lol_ax.set_xticklabels(%0A%20%20%20%20%20%20%20%20%20%20%20%20%5Bf%22%7Bint(s)%7D%22%20if%20not%20np.isnan(s)%20else%20%22%E2%80%94%22%20for%20s%20in%20comp%5B%22scale%22%5D%5D%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20lol_ax.set_xlabel(%22scale%20(pixels)%22)%0A%20%20%20%20%20%20%20%20lol_ax.set_yticks(%5B%5D)%0A%20%20%20%20%20%20%20%20ymax%20%3D%20max(comp%5B%22ss_share%22%5D.max()%2C%200.05)%20*%201.35%0A%20%20%20%20%20%20%20%20lol_ax.set_ylim(0%2C%20ymax)%0A%20%20%20%20%20%20%20%20lol_ax.axhline(0%2C%20color%3D%22%23999%22%2C%20linewidth%3D0.6)%0A%20%20%20%20%20%20%20%20for%20s%20in%20(%22top%22%2C%20%22right%22%2C%20%22left%22)%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20lol_ax.spines%5Bs%5D.set_visible(False)%0A%20%20%20%20%20%20%20%20lol_ax.spines%5B%22bottom%22%5D.set_visible(False)%0A%20%20%20%20%20%20%20%20lol_ax.set_title(%22share%20of%20total%20variance%20by%20scale%22)%0A%20%20%20%20%20%20%20%20lol_fig.tight_layout()%0A%20%20%20%20%20%20%20%20lollipop_view%20%3D%20lol_fig%0A%20%20%20%20lollipop_view%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_components_table(mo%2C%20result)%3A%0A%20%20%20%20components_view%20%3D%20(%0A%20%20%20%20%20%20%20%20mo.ui.table(result.components.round(6)%2C%20selection%3DNone)%0A%20%20%20%20%20%20%20%20if%20result%20is%20not%20None%0A%20%20%20%20%20%20%20%20else%20None%0A%20%20%20%20)%0A%20%20%20%20components_view%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_playground_imports()%3A%0A%20%20%20%20from%20playground%20import%20(%0A%20%20%20%20%20%20%20%20generate_code_snippet%2C%0A%20%20%20%20%20%20%20%20interpret_result%2C%0A%20%20%20%20%20%20%20%20permalink%2C%0A%20%20%20%20)%0A%0A%20%20%20%20return%20generate_code_snippet%2C%20interpret_result%2C%20permalink%0A%0A%0A%40app.cell%0Adef%20_current_state(agg_fun%2C%20base_level_factor)%3A%0A%20%20%20%20state%20%3D%20%7B%0A%20%20%20%20%20%20%20%20%22base_level_factor%22%3A%20base_level_factor.value%2C%0A%20%20%20%20%20%20%20%20%22agg_fun%22%3A%20agg_fun.value%2C%0A%20%20%20%20%20%20%20%20%22scalevar_version%22%3A%20%220.1.0%22%2C%0A%20%20%20%20%20%20%20%20%22preset%22%3A%20None%2C%0A%20%20%20%20%7D%0A%20%20%20%20return%20(state%2C)%0A%0A%0A%40app.cell%0Adef%20_appendix_button(mo)%3A%0A%20%20%20%20show_appendix%20%3D%20mo.ui.run_button(label%3D%22Generate%20Methods%20Appendix%22)%0A%20%20%20%20return%20(show_appendix%2C)%0A%0A%0A%40app.cell%0Adef%20_appendix_button_view(show_appendix)%3A%0A%20%20%20%20show_appendix%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_appendix(%0A%20%20%20%20generate_code_snippet%2C%0A%20%20%20%20interpret_result%2C%0A%20%20%20%20mo%2C%0A%20%20%20%20permalink%2C%0A%20%20%20%20result%2C%0A%20%20%20%20show_appendix%2C%0A%20%20%20%20state%2C%0A)%3A%0A%20%20%20%20if%20result%20is%20None%3A%0A%20%20%20%20%20%20%20%20appendix%20%3D%20mo.md(%0A%20%20%20%20%20%20%20%20%20%20%20%20r%22_Methods%20Appendix%20is%20unavailable%20while%20the%20decomposition%20cannot%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20r%22be%20computed%20(see%20banner%20above)._%22%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20elif%20not%20show_appendix.value%3A%0A%20%20%20%20%20%20%20%20appendix%20%3D%20mo.md(%0A%20%20%20%20%20%20%20%20%20%20%20%20r%22_Set%20parameters%20above%2C%20then%20click%20**Generate%20Methods%20Appendix**%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20r%22for%20a%20paste-ready%20Python%20snippet%2C%20paper-language%20interpretation%2C%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20r%22and%20a%20permalink%20to%20share%20this%20exact%20view._%22%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20snippet%20%3D%20generate_code_snippet(state)%0A%20%20%20%20%20%20%20%20interpretation%20%3D%20interpret_result(result%2C%20state)%0A%20%20%20%20%20%20%20%20url%20%3D%20permalink(state)%0A%20%20%20%20%20%20%20%20bibtex%20%3D%20(%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%40article%7Bmoellering1972%2C%5Cn%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%20%20author%20%20%3D%20%7BMoellering%2C%20Harold%20and%20Tobler%2C%20Waldo%7D%2C%5Cn%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%20%20title%20%20%20%3D%20%7BGeographical%20Variances%7D%2C%5Cn%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%20%20journal%20%3D%20%7BGeographical%20Analysis%7D%2C%5Cn%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%20%20volume%20%20%3D%20%7B4%7D%2C%20number%20%3D%20%7B1%7D%2C%20pages%20%3D%20%7B34--50%7D%2C%20year%20%3D%20%7B1972%7D%5Cn%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%7D%22%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20appendix%20%3D%20mo.vstack(%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20mo.md(%22%23%23%23%20Methods%20Appendix%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20mo.md(f%22**Interpretation.**%20%7Binterpretation%7D%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20mo.md(%22**Python%20(paste%20into%20your%20thesis%20or%20a%20notebook)%3A**%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20mo.md(f%22%60%60%60python%5Cn%7Bsnippet%7D%5Cn%60%60%60%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20mo.md(f%22**Permalink%3A**%20%5B%60%7Burl%7D%60%5D(%7Burl%7D)%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20mo.accordion(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22Cite%20the%20original%20paper%20(BibTeX)%22%3A%20mo.md(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20f%22%60%60%60bibtex%5Cn%7Bbibtex%7D%5Cn%60%60%60%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22Questions%20or%20bug%20reports%22%3A%20mo.md(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22Open%20an%20issue%3A%20%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%3Chttps%3A%2F%2Fgithub.com%2Fjacobdein%2Fscale-variance%2Fissues%3E%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20appendix%0A%20%20%20%20return%0A%0A%0A%40app.cell(hide_code%3DTrue)%0Adef%20_footer(mo)%3A%0A%20%20%20%20mo.md(r%22%22%22%0A%20%20%20%20---%0A%20%20%20%20Source%3A%20Moellering%2C%20H.%2C%20%26%20Tobler%2C%20W.%20(1972).%20*Geographical%20Variances*.%0A%20%20%20%20*Geographical%20Analysis*%204(1)%2C%2034%E2%80%9350.%20The%20decomposition%20is%20computed%20by%0A%20%20%20%20%5B%60scalevar%60%5D(https%3A%2F%2Fgithub.com%2Fjacobdein%2Fscale-variance)%20running%20entirely%0A%20%20%20%20in%20your%20browser%20via%20Pyodide%3B%20nothing%20is%20sent%20to%20a%20server.%0A%20%20%20%20%22%22%22)%0A%20%20%20%20return%0A%0A%0Aif%20__name__%20%3D%3D%20%22__main__%22%3A%0A%20%20%20%20app.run()%0A</marimo-code></head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a portal for the data editor to render in -->
+    <div id="portal" data-testid="glide-portal" style="position: fixed; left: 0; top: 0; z-index: 9999"></div>
+    <script data-marimo="true">
+      Object.defineProperty(window, "__MARIMO_MOUNT_CONFIG__", {
+        value: Object.freeze({
+            "filename": "notebook.py",
+            "cwd": "",
+            "lspWorkspace": null,
+            "mode": "read",
+            "version": "0.23.5",
+            "serverToken": "unused",
+            "config": {"ai": {"custom_providers": {}, "models": {"custom_models": [], "displayed_models": []}}, "completion": {"activate_on_typing": true, "copilot": false, "signature_hint_on_typing": false}, "diagnostics": {"sql_linter": true}, "display": {"cell_output": "below", "code_editor_font_size": 14, "dataframes": "rich", "default_table_max_columns": 50, "default_table_page_size": 10, "default_width": "medium", "reference_highlighting": true, "theme": "light"}, "formatting": {"line_length": 79}, "keymap": {"overrides": {}, "preset": "default"}, "language_servers": {"pylsp": {"enable_flake8": false, "enable_mypy": true, "enable_pydocstyle": false, "enable_pyflakes": false, "enable_pylint": false, "enable_ruff": true, "enabled": false}}, "mcp": {"mcpServers": {}, "presets": []}, "package_management": {"manager": "uv"}, "runtime": {"auto_instantiate": false, "auto_reload": "off", "default_csv_encoding": "utf-8", "default_sql_output": "auto", "on_cell_change": "autorun", "output_max_bytes": 8000000, "reactive_tests": true, "show_tracebacks": false, "std_stream_max_bytes": 1000000, "watcher_on_save": "lazy"}, "save": {"autosave": "off", "autosave_delay": 1000, "format_on_save": false}, "server": {"browser": "default", "follow_symlink": false}, "snippets": {"custom_paths": [], "include_default_snippets": true}},
+            "configOverrides": {},
+            "appConfig": {"sql_output": "auto", "width": "medium"},
+            "view": {"showAppCode": false},
+            "notebook": null,
+            "session": null,
+            "runtimeConfig": null,
+        }),
+        writable: false,
+        configurable: false,
+      });
+    </script>
+  </body>
+</html>
