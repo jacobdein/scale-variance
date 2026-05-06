@@ -31,13 +31,19 @@ async def _install_scalevar():
         import js
         import micropip
 
-        # The cell runs inside pyodide's web worker; js.location there points
-        # at the worker script (/assets/worker-*.js), not the page. Use the
-        # origin and a server-root path so the resolved URL is independent of
-        # where the worker bundle lives.
-        origin = js.location.origin
+        # The cell runs inside pyodide's web worker. js.location.href there
+        # is the worker URL, e.g.:
+        #   https://jacobdein.github.io/scale-variance/playground/assets/worker-XXX.js
+        # The wheels we want sit alongside the page (one level up from
+        # /assets/), so derive the playground base by stripping /assets/...
+        # off the worker URL. Doing this against origin alone breaks on
+        # GitHub Pages project subpaths — origin is github.io, not
+        # github.io/<repo>/playground.
+        playground_base = js.location.href.rsplit("/assets/", 1)[0]
         try:
-            await micropip.install(f"{origin}/scalevar-0.1.1-py3-none-any.whl")
+            await micropip.install(
+                f"{playground_base}/scalevar-0.1.1-py3-none-any.whl"
+            )
             install_log += "scalevar installed; "
         except Exception as exc:
             install_log += f"scalevar FAILED: {exc!r}; "
@@ -45,7 +51,7 @@ async def _install_scalevar():
             # playground depends on scalevar + stdlib only; deps=False keeps
             # micropip from chasing marimo / matplotlib / etc.
             await micropip.install(
-                f"{origin}/scalevar_playground-0.1.1-py3-none-any.whl",
+                f"{playground_base}/scalevar_playground-0.1.1-py3-none-any.whl",
                 deps=False,
             )
             install_log += "playground installed."
