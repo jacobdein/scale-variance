@@ -187,7 +187,7 @@ def _compute_error_banner(compute_error, mo):
 
 @app.cell
 def _summary(mo, result):
-    out = (
+    summary_view = (
         mo.md(
             f"**TSS** = {result.total_ss:.1f} &nbsp;&nbsp; "
             f"**total_df** = {result.total_df} &nbsp;&nbsp; "
@@ -196,7 +196,7 @@ def _summary(mo, result):
         if result is not None
         else None
     )
-    out
+    summary_view
     return
 
 
@@ -223,7 +223,7 @@ def _raster_plot(np, plt, raster):
 @app.cell
 def _lollipop(np, plt, result):
     if result is None:
-        out = None
+        lollipop_view = None
     else:
         comp = result.components
         x = np.arange(len(comp))
@@ -249,19 +249,19 @@ def _lollipop(np, plt, result):
         lol_ax.spines["bottom"].set_visible(False)
         lol_ax.set_title("share of total variance by scale")
         lol_fig.tight_layout()
-        out = lol_fig
-    out
+        lollipop_view = lol_fig
+    lollipop_view
     return
 
 
 @app.cell
 def _components_table(mo, result):
-    out = (
+    components_view = (
         mo.ui.table(result.components.round(6), selection=None)
         if result is not None
         else None
     )
-    out
+    components_view
     return
 
 
