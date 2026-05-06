@@ -4,6 +4,17 @@ All notable changes to the `scalevar` packages are recorded here. This project f
 
 <!--changelog-start-->
 
+## [v0.1.1] — 2026-05-05
+
+Additive release. The `scalevar` Python library is unchanged at the source level; this release ships an interactive sibling artifact (the playground) plus the CI plumbing to deploy it.
+
+### Added
+
+- **Interactive playground** at `https://jacobdein.github.io/scale-variance/playground/` — a marimo notebook exported to WASM that runs `scale_variance_raster` entirely in the browser via Pyodide. Drag the `base_level_factor` slider, watch the lollipop reshape, click **Generate Methods Appendix** for a paste-ready Python snippet pinned to the current release, a paper-language interpretation, and a permalink encoding the parameter choices. Source under `playground/`; pure-function helpers (state serialization, snippet generation, paper-language interpretation) live at `playground/src/playground/` with 248 unit tests including a clean-env subprocess exec that asserts the emitted snippet reproduces `TSS = 1152`, `TDF = 255`. Sibling project to `python/`, NOT part of the `scalevar` library (the library stays small and stable).
+- **`agg_fun` is mean-only on the playground.** The dropdown is restricted to the paper-canonical `"mean"` since other aggregations (sum / median / modal / min / max / sd / var) violate the closure identity `Σ SS_n = TSS` on the MT1972 fixture and would silently lock the lollipop on stale state. The compute path catches scalevar's `RuntimeError` and surfaces a banner per the failure-mode table.
+- **`docs.yml` now builds the playground bundle** after `mkdocs build --strict`, merges the WASM artifacts into `python/site/playground/`, and ships via `ghp-import`. Tag pushes wait for `release.yml` (via `workflow_run`) so the deployed playground always points at a wheel that exists in the GitHub Release.
+- **`tests.yml`** has a new `playground` job that runs the 248 pytest cases.
+
 ## [v0.1.0] — 2026-04-29
 
 First release. Python package ships from GitHub; the R sibling package is planned for v0.2 — see [ROADMAP.md](ROADMAP.md).
@@ -39,3 +50,4 @@ First release. Python package ships from GitHub; the R sibling package is planne
 <!--changelog-end-->
 
 [v0.1.0]: https://github.com/jacobdein/scale-variance/releases/tag/v0.1.0
+[v0.1.1]: https://github.com/jacobdein/scale-variance/releases/tag/v0.1.1

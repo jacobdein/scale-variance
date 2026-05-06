@@ -5,6 +5,14 @@ on:
     branches: [main]
     tags: ["v*"]
   workflow_dispatch:
+  workflow_run:
+    # On tag pushes, release.yml uploads the GitHub-Release wheel the
+    # playground installs at runtime via micropip. Re-trigger docs after
+    # release.yml succeeds so the deployed playground always points at a
+    # wheel that exists. (Tag pushes also trigger this workflow directly,
+    # but that race finishes before the wheel is uploaded.)
+    workflows: [release]
+    types: [completed]
 
 concurrency:
   group: docs-${{ github.ref }}
@@ -16,9 +24,8 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: python
+    # If triggered by workflow_run, only proceed when release.yml succeeded.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,17 +37,34 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install scalevar with docs + raster + spatial
+      - name: Install scalevar (with docs / raster / spatial extras)
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[raster,spatial,docs]"
+          pip install -e "./python[raster,spatial,docs]"
 
-      - name: Build site (strict)
-        run: mkdocs build --strict
+      - name: Install playground tooling
+        run: |
+          pip install build ghp-import marimo
+          pip install -e ./playground --no-deps
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+      - name: Build mkdocs site
+        run: |
+          cd python
+          mkdocs build --strict
+
+      - name: Export marimo notebook to WASM bundle
+        run: |
+          cd playground
+          bash scripts/export_wasm.sh
+
+      - name: Merge playground bundle into the mkdocs site
+        run: |
+          mkdir -p python/site/playground
+          cp -r playground/dist/. python/site/playground/
+
+      - name: Deploy via ghp-import
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_run'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          mkdocs gh-deploy --force --no-history
+          ghp-import --no-history --force --push --message "deploy ${GITHUB_SHA::7}" python/site

@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scalevar-playground"
+version = "0.1.1"
+description = "Interactive playground for the scalevar Moellering-Tobler decomposition"
+readme = "README.md"
+license = { file = "../LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Jake Dein", email = "jake@jacobdein.com" },
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "Private :: Do Not Upload",
+]
+dependencies = [
+    "scalevar",
+    "marimo>=0.16,<0.20",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/playground"]
+
+# Local dev: scalevar isn't on PyPI in v0.1 (per CLAUDE.md). Point uv/pip
+# at the sibling python/ package so `uv run`, `uv sync`, and editable
+# installs all resolve it from the working tree.
+[tool.uv.sources]
+scalevar = { path = "../python", editable = true }
+
+[dependency-groups]
+dev = [
+    "build>=1.5.0",
+    "pytest>=9.0.3",
+]

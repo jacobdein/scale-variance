@@ -4,6 +4,8 @@
 
 A direct Python implementation of the method introduced by Moellering and Tobler (1972), *Geographical Variances*.
 
+> **Try it in your browser**: the [interactive playground](https://jacobdein.github.io/scale-variance/playground/) runs `scalevar` end-to-end via Pyodide — no install needed to see the decomposition on the paper's canonical 16×16 fixture.
+
 ## Install
 
 `scalevar` is not yet on PyPI. For v0.1, install from GitHub:
@@ -107,7 +109,7 @@ The paper-canonical variance share is `components.ss_share` (sums to 1). `compon
 
 ## Status
 
-**v0.1.0** — this package. Validated against the 1972 paper's published totals for Figure 3 (`TSS = 1152`, `TDF = 255`). 28 pytest tests green. Not yet on PyPI — ship from GitHub for now (v0.3 decision point).
+**v0.1.1** — this package. Validated against the 1972 paper's published totals for Figure 3 (`TSS = 1152`, `TDF = 255`). 28 pytest tests green for the library; 248 more for the [playground](https://jacobdein.github.io/scale-variance/playground/) sibling. Not yet on PyPI — ship from GitHub for now (v0.3 decision point).
 
 The R sibling package (`r/` in the repository) is planned for **v0.2.0** alongside a cross-language parity harness that will validate both implementations against the shared [`tests/fixtures/`](../tests/fixtures/) suite. See the project [ROADMAP](../ROADMAP.md) and [CHANGELOG](../CHANGELOG.md).
 

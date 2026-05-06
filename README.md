@@ -8,13 +8,19 @@
   <sub>Worked example: Moellering &amp; Tobler (1972), Figure 3</sub>
 </p>
 
+<p align="center">
+  <a href="https://jacobdein.github.io/scale-variance/playground/"><strong>↗ Try it in your browser →</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://jacobdein.github.io/scale-variance/">Docs</a>
+</p>
+
 `scalevar` partitions the total variance of a variable measured across a nested hierarchy into the share attributable to each level of that hierarchy. It is a direct implementation of the method introduced by Moellering and Tobler (1972), *Geographical Variances*.
 
 ## Status
 
 | Package | Version | Install |
 |---------|---------|---------|
-| **Python** (`python/`) | **v0.1.0** (current) | `pip install git+https://github.com/jacobdein/scale-variance.git#subdirectory=python` |
+| **Python** (`python/`) | **v0.1.1** (current) | `pip install git+https://github.com/jacobdein/scale-variance.git#subdirectory=python` |
 | **R** (`r/`) | v0.2.0 (planned) | see [ROADMAP.md](ROADMAP.md) |
 
 Both packages target the same API contract in [`docs/api-design.md`](docs/api-design.md) and share a hand-derived fixture suite under [`tests/fixtures/`](tests/fixtures) (gold standard: Moellering & Tobler Figure 3, with the paper's published totals `TSS = 1152`, `TDF = 255`). The Python package ships first; the R sibling follows in v0.2 alongside a cross-language parity harness.
