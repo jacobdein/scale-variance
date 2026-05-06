@@ -4,6 +4,8 @@
 
 A direct Python implementation of the method introduced by Moellering and Tobler (1972), *Geographical Variances*.
 
+> **Try it in your browser**: the [interactive playground](https://jacobdein.github.io/scale-variance/playground/) runs `scalevar` end-to-end via Pyodide — no install needed to see the decomposition on the paper's canonical 16×16 fixture.
+
 ## Install
 
 `scalevar` is not yet on PyPI. For v0.1, install from GitHub:

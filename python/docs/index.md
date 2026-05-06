@@ -4,6 +4,9 @@
 
 `scalevar` partitions the total variance of a variable measured across a nested hierarchy into the share attributable to each level of that hierarchy. It is a direct implementation of the method introduced by Moellering and Tobler (1972), *Geographical Variances*.
 
+!!! tip "Try it in your browser"
+    Drag a slider, watch the lollipop chart reshape, copy a paste-ready Python snippet for your thesis: **[open the interactive playground →](playground.md)**. Runs entirely in your browser via Pyodide; nothing is sent to a server.
+
 ## What it does
 
 Given a quantity — raster pixels, survey points, administrative areas — measured at the finest level of a nested hierarchy, `scalevar` answers:

@@ -5,12 +5,14 @@ on:
     branches: [main]
     paths:
       - "python/**"
+      - "playground/**"
       - "tests/fixtures/**"
       - ".github/workflows/tests.yml"
   pull_request:
     branches: [main]
     paths:
       - "python/**"
+      - "playground/**"
       - "tests/fixtures/**"
       - ".github/workflows/tests.yml"
 
@@ -51,3 +53,25 @@ jobs:
 
       - name: Pytest
         run: pytest -v
+
+  playground:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install scalevar + playground (no marimo dep — tests don't need it)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ./python
+          pip install -e ./playground --no-deps
+          pip install pytest
+
+      - name: Pytest
+        working-directory: playground
+        run: pytest -v tests/

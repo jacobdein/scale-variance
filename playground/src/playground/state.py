@@ -36,8 +36,7 @@ SUPPORTED_AGG_FUNS: tuple[str, ...] = (
 
 PRESETS: dict[str, dict[str, int | str]] = {
     "classic": {"base_level_factor": 2, "agg_fun": "mean"},
-    "smoothing-extreme": {"base_level_factor": 4, "agg_fun": "mean"},
-    "agg-contrast": {"base_level_factor": 2, "agg_fun": "median"},
+    "coarse-step": {"base_level_factor": 4, "agg_fun": "mean"},
 }
 
 DEFAULT_STATE: dict[str, int | str | None] = {

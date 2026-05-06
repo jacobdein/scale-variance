@@ -1,5 +1,8 @@
 # Getting started
 
+!!! tip "Try it before you install"
+    The **[interactive playground](playground.md)** runs `scalevar` in your browser via Pyodide — no install needed to see what the decomposition does on the canonical Moellering & Tobler (1972) Figure 3 fixture.
+
 ## Install
 
 `scalevar` is not on PyPI yet (scheduled for v0.3 — see the [roadmap](https://github.com/jacobdein/scale-variance/blob/main/ROADMAP.md)). For v0.1, install from GitHub:

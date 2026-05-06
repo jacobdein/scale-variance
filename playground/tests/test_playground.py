@@ -201,7 +201,7 @@ def test_snippet_runs_in_clean_env_and_matches_paper(tmp_path):
 
 
 def test_permalink_round_trips_through_deserialize():
-    state = _state_for(bf=4, af="median", preset="agg-contrast")
+    state = _state_for(bf=4, af="mean", preset="coarse-step")
     url = permalink(state)
     fragment = url.split("#", 1)[1]
     parsed, banner = deserialize_state(fragment, deployed_version=DEPLOYED_VERSION)

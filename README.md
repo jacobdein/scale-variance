@@ -8,6 +8,12 @@
   <sub>Worked example: Moellering &amp; Tobler (1972), Figure 3</sub>
 </p>
 
+<p align="center">
+  <a href="https://jacobdein.github.io/scale-variance/playground/"><strong>↗ Try it in your browser →</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://jacobdein.github.io/scale-variance/">Docs</a>
+</p>
+
 `scalevar` partitions the total variance of a variable measured across a nested hierarchy into the share attributable to each level of that hierarchy. It is a direct implementation of the method introduced by Moellering and Tobler (1972), *Geographical Variances*.
 
 ## Status
