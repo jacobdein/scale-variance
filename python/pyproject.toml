@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "scalevar"
-version = "0.1.0"
+version = "0.1.1"
 description = "Moellering-Tobler scale-variance decomposition for rasters and nested hierarchies"
 readme = "README.md"
 license = { file = "LICENSE" }

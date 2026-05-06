@@ -20,7 +20,7 @@
 
 | Package | Version | Install |
 |---------|---------|---------|
-| **Python** (`python/`) | **v0.1.0** (current) | `pip install git+https://github.com/jacobdein/scale-variance.git#subdirectory=python` |
+| **Python** (`python/`) | **v0.1.1** (current) | `pip install git+https://github.com/jacobdein/scale-variance.git#subdirectory=python` |
 | **R** (`r/`) | v0.2.0 (planned) | see [ROADMAP.md](ROADMAP.md) |
 
 Both packages target the same API contract in [`docs/api-design.md`](docs/api-design.md) and share a hand-derived fixture suite under [`tests/fixtures/`](tests/fixtures) (gold standard: Moellering & Tobler Figure 3, with the paper's published totals `TSS = 1152`, `TDF = 255`). The Python package ships first; the R sibling follows in v0.2 alongside a cross-language parity harness.

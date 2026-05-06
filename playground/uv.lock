@@ -1365,7 +1365,7 @@ wheels = [
 
 [[package]]
 name = "scalevar"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "../python" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -1401,7 +1401,7 @@ provides-extras = ["raster", "spatial", "dev", "docs"]
 
 [[package]]
 name = "scalevar-playground"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "marimo" },

@@ -42,7 +42,7 @@ PRESETS: dict[str, dict[str, int | str]] = {
 DEFAULT_STATE: dict[str, int | str | None] = {
     "base_level_factor": 2,
     "agg_fun": "mean",
-    "scalevar_version": "0.1.0",
+    "scalevar_version": "0.1.1",
     "preset": "classic",
 }
 
@@ -88,7 +88,7 @@ def serialize_state(
 
 def deserialize_state(
     fragment: str,
-    deployed_version: str = "0.1.0",
+    deployed_version: str = "0.1.1",
 ) -> tuple[State, str | None]:
     """Parse a URL hash fragment into a validated state dict.
 
@@ -190,7 +190,7 @@ def _defaults() -> State:
     return {
         "base_level_factor": 2,
         "agg_fun": "mean",
-        "scalevar_version": "0.1.0",
+        "scalevar_version": "0.1.1",
         "preset": "classic",
     }
 

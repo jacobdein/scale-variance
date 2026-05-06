@@ -35,7 +35,7 @@ from playground import (
 )
 
 
-DEPLOYED_VERSION = "0.1.0"
+DEPLOYED_VERSION = "0.1.1"
 
 
 # ---------------------------------------------------------------------------
@@ -100,7 +100,7 @@ def test_negative_parser_surfaces_banner_and_defaults(fragment, banner_substring
     # On any failure we hand back the defaults — never partial state.
     assert state["base_level_factor"] == 2
     assert state["agg_fun"] == "mean"
-    assert state["scalevar_version"] == "0.1.0"
+    assert state["scalevar_version"] == DEPLOYED_VERSION
 
 
 def test_empty_fragment_loads_defaults_silently():

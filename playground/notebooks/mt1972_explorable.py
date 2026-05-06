@@ -23,7 +23,7 @@ async def _install_scalevar():
     # scalevar is not on PyPI in v0.1; install the wheel that ships next to
     # the playground bundle. In production this URL points at the GitHub
     # Release wheel (read from playground-manifest.json); for local dev the
-    # wheel lives at ./scalevar-0.1.0-py3-none-any.whl in the same dist/.
+    # wheel lives at ./scalevar-0.1.1-py3-none-any.whl in the same dist/.
     import sys
 
     install_log = ""
@@ -37,7 +37,7 @@ async def _install_scalevar():
         # where the worker bundle lives.
         origin = js.location.origin
         try:
-            await micropip.install(f"{origin}/scalevar-0.1.0-py3-none-any.whl")
+            await micropip.install(f"{origin}/scalevar-0.1.1-py3-none-any.whl")
             install_log += "scalevar installed; "
         except Exception as exc:
             install_log += f"scalevar FAILED: {exc!r}; "
@@ -45,7 +45,7 @@ async def _install_scalevar():
             # playground depends on scalevar + stdlib only; deps=False keeps
             # micropip from chasing marimo / matplotlib / etc.
             await micropip.install(
-                f"{origin}/scalevar_playground-0.1.0-py3-none-any.whl",
+                f"{origin}/scalevar_playground-0.1.1-py3-none-any.whl",
                 deps=False,
             )
             install_log += "playground installed."
