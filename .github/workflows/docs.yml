@@ -61,6 +61,13 @@ jobs:
         run: |
           mkdir -p python/site/playground
           cp -r playground/dist/. python/site/playground/
+          # GitHub Pages runs Jekyll by default, which strips anything that
+          # starts with an underscore. The marimo bundle ships JS chunks like
+          # _baseFor-*.js and _baseSet-*.js that would 404 on the deployed
+          # site. .nojekyll at the *root* of the deployed branch disables
+          # Jekyll for the whole site (a .nojekyll under /playground/ is not
+          # honored).
+          touch python/site/.nojekyll
 
       - name: Deploy via ghp-import
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_run'
